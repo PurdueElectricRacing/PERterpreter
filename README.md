@@ -5,7 +5,7 @@ To clone this repository, run the following command as this project makes use of
 
 Running the interpreter
 ========================
-The executable is supposed to be built into the `./build` directory. You can run it from here by passing the arguments necessary, or you can add it to your path
+The executable is supposed to be built into the `./build` directory. You can run it from here by passing the arguments necessary (see [commands](#perterpreter-commands)), or you can add it to your path.
 
 ## Language Grammar
 
@@ -187,7 +187,8 @@ else
 - with the exception of RETVAL, all system defined global variables are to remain statically typed (i.e. SERIAL_LOG_FILE will always remain a string)
 
  
-- interpreter will have the following command structure:
+PERterpreter commands
+=====================
   perterpret <scriptname.pers> [(-V, --validate} | (-rt, --run-tests testlist) | (-rr, --run-routines routinelist)]| <-g dest> [-dev device] [-io device] [-v] [-l logfile]
     - `-dev`: generic serial device which serial-rx and serial-tx will send / receive from
     - `-io`: the device to be used as the IO platform (e.g. COM3, /dev/tty4, etc)

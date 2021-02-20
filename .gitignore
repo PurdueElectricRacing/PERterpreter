@@ -1,0 +1,6 @@
+Makefile*
+.vscode
+build
+moc
+obj
+*.user

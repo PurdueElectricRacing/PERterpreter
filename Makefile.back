@@ -1,0 +1,47 @@
+CC = g++
+CFLAGS = -std=c++17 -Wall -Iinc -DSTANDALONE -g
+
+FLEXFILE = src/lexer.l
+BISONFILE = src/parser.y
+
+YACC=bison -v -g -d -t --color
+LEX=flex
+
+SRC = src/ast.cpp \
+			src/symbol-table.cpp \
+			src/perterpreter.cpp \
+			src/parser.cpp \
+			src/lexer.cpp \
+			src/stringify.cpp \
+			src/type-checker.cpp \
+			src/synterr.cpp \
+			src/operators.cpp \
+
+all: bison flex interpreter
+
+debug: bison flex interpreterdb
+
+
+flex:
+	${LEX} -o src/lexer.cpp ${FLEXFILE}
+
+bison: 
+	${YACC} -o src/parser.cpp --defines=inc/parser.h ${BISONFILE}
+
+bisondb: 
+	${YACC} -o src/parser.cpp --defines=inc/parser.h ${BISONFILE}
+
+bisonce:
+	${YACC} -Wcounterexamples --report=all -o src/parser.cpp \
+			    --defines=inc/parser.h ${BISONFILE}
+
+interpreter:
+	$(CC) $(CFLAGS) $(SRC) -DSTANDALONE -o perterpreter
+
+interpreterdb:
+	$(CC) $(CFLAGS) -DDEBUG=1 $(SRC) -DSTANDALONE -o perterpreter
+
+
+
+clean: 
+	rm -f  src/parser.output src/parser.dot src/parser.cpp *.o inc/parser.h

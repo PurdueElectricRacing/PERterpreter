@@ -1,0 +1,2287 @@
+Terminals unused in grammar
+
+    '|'
+
+
+Grammar
+
+    0 $accept: goal $end
+
+    1 goal: testScript
+
+    2 testScript: VarList RoutineList TestList
+
+    3 VarList: %empty
+    4        | VarList VariableAssign
+
+    5 RoutineList: RoutineList Routine
+    6            | %empty
+
+    7 Routine: routine stringLiteral '{' StatementList '}'
+
+    8 TestList: TestList Test
+    9         | %empty
+
+   10 Test: test stringLiteral '{' StatementList '}'
+
+   11 StatementList: %empty
+   12              | StatementList Statement
+
+   13 ExpectCall: expect Exp
+   14           | assert Exp
+
+   15 PromptCall: prompt Exp
+
+   16 PrintCall: perrint Exp
+   17          | perrintln Exp
+
+   18 Index: '[' Exp ']'
+
+   19 CanManip: identifier Index
+   20         | identifier '.' length
+
+   21 Exp: CanManip
+   22    | Exp add Exp
+   23    | Exp mult Exp
+   24    | Exp NE Exp
+   25    | Exp EQ Exp
+   26    | Exp comparison Exp
+   27    | Exp andToken Exp
+   28    | Exp orToken Exp
+   29    | identifier
+   30    | stringLiteral
+   31    | integerLiteral
+   32    | hexLiteral
+   33    | can_msg
+   34    | add Exp
+   35    | '(' Exp ')'
+
+   36 VariableAssign: identifier '=' Exp ';'
+   37               | identifier Index '=' Exp ';'
+   38               | identifier '.' length '=' Exp ';'
+
+   39 SendMsgCall: send_msg hexLiteral Exp
+   40            | send_msg identifier Exp
+
+   41 ReadMsgCall: read_msg hexLiteral
+   42            | read_msg identifier
+
+   43 ReadPinCall: read_pin ain integerLiteral
+   44            | read_pin ain identifier
+   45            | read_pin din integerLiteral
+   46            | read_pin din identifier
+
+   47 SetAnalogTail: integerLiteral identifier
+   48              | identifier identifier
+   49              | identifier integerLiteral
+   50              | integerLiteral integerLiteral
+
+   51 SetPinCall: set_pin aout SetAnalogTail
+   52           | set_pin dout integerLiteral dstate
+   53           | set_pin dout identifier dstate
+
+   54 DelayCall: delay Exp
+
+   55 LoopCall: loop Exp '{' StatementList '}'
+   56         | loop forever '{' StatementList '}'
+
+   57 Statement: error ';'
+   58          | If '(' Exp ')' '{' StatementList '}'
+   59          | If '(' Exp ')' '{' StatementList '}' Else '{' StatementList '}'
+   60          | VariableAssign
+   61          | call stringLiteral ';'
+   62          | LoopCall
+   63          | SetPinCall ';'
+   64          | ReadPinCall ';'
+   65          | ExpectCall ';'
+   66          | PrintCall ';'
+   67          | SendMsgCall ';'
+   68          | ReadMsgCall ';'
+   69          | DelayCall ';'
+   70          | PromptCall ';'
+   71          | serialTx Exp ';'
+   72          | serialRx ';'
+   73          | exit_tok ';'
+   74          | exit_tok stringLiteral ';'
+   75          | Exp plusplus ';'
+   76          | Exp minusminus ';'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' <node> (40) 35 58 59
+    ')' <node> (41) 35 58 59
+    '.' (46) 20 38
+    ';' <node> (59) 36 37 38 57 61 63 64 65 66 67 68 69 70 71 72 73 74 75 76
+    '=' (61) 36 37 38
+    '[' (91) 18
+    ']' (93) 18
+    '{' <node> (123) 7 10 55 56 58 59
+    '|' <node> (124)
+    '}' <node> (125) 7 10 55 56 58 59
+    error (256) 57
+    routine <node> (258) 7
+    test <node> (259) 10
+    loop <node> (260) 55 56
+    delay <node> (261) 54
+    read_pin <node> (262) 43 44 45 46
+    set_pin <node> (263) 51 52 53
+    perrint <node> (264) 16
+    perrintln <node> (265) 17
+    expect <node> (266) 13
+    exit_tok <node> (267) 73 74
+    prompt <node> (268) 15
+    read_msg <node> (269) 41 42
+    send_msg <node> (270) 39 40
+    call <node> (271) 61
+    forever <node> (272) 56
+    dout <node> (273) 52 53
+    din <node> (274) 45 46
+    aout <node> (275) 51
+    ain <node> (276) 43 44
+    serialRx <node> (277) 72
+    serialTx <node> (278) 71
+    assert <node> (279) 14
+    If <node> (280) 58 59
+    Else <node> (281) 59
+    length <node> (282) 20 38
+    stringLiteral <str> (283) 7 10 30 61 74
+    identifier <str> (284) 19 20 29 36 37 38 40 42 44 46 47 48 49 53
+    can_msg <str> (285) 33
+    add <str> (286) 22 34
+    mult <str> (287) 23
+    comparison <str> (288) 26
+    andToken <str> (289) 27
+    orToken <str> (290) 28
+    NE <str> (291) 24
+    EQ <str> (292) 25
+    integerLiteral <i> (293) 31 43 45 47 49 50 52
+    hexLiteral <i> (294) 32 39 41
+    dstate <i> (295) 52 53
+    plusplus (296) 75
+    minusminus (297) 76
+
+
+Nonterminals, with rules where they appear
+
+    $accept (53)
+        on left: 0
+    goal (54)
+        on left: 1
+        on right: 0
+    testScript <node> (55)
+        on left: 2
+        on right: 1
+    VarList <node> (56)
+        on left: 3 4
+        on right: 2 4
+    RoutineList <node> (57)
+        on left: 5 6
+        on right: 2 5
+    Routine <node> (58)
+        on left: 7
+        on right: 5
+    TestList <node> (59)
+        on left: 8 9
+        on right: 2 8
+    Test <node> (60)
+        on left: 10
+        on right: 8
+    StatementList <node> (61)
+        on left: 11 12
+        on right: 7 10 12 55 56 58 59
+    ExpectCall <node> (62)
+        on left: 13 14
+        on right: 65
+    PromptCall <node> (63)
+        on left: 15
+        on right: 70
+    PrintCall <node> (64)
+        on left: 16 17
+        on right: 66
+    Index <node> (65)
+        on left: 18
+        on right: 19 37
+    CanManip <node> (66)
+        on left: 19 20
+        on right: 21
+    Exp <node> (67)
+        on left: 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35
+        on right: 13 14 15 16 17 18 22 23 24 25 26 27 28 34 35 36 37 38 39 40 54 55 58 59 71 75 76
+    VariableAssign <node> (68)
+        on left: 36 37 38
+        on right: 4 60
+    SendMsgCall <node> (69)
+        on left: 39 40
+        on right: 67
+    ReadMsgCall <node> (70)
+        on left: 41 42
+        on right: 68
+    ReadPinCall <node> (71)
+        on left: 43 44 45 46
+        on right: 64
+    SetAnalogTail <node> (72)
+        on left: 47 48 49 50
+        on right: 51
+    SetPinCall <node> (73)
+        on left: 51 52 53
+        on right: 63
+    DelayCall <node> (74)
+        on left: 54
+        on right: 69
+    LoopCall <node> (75)
+        on left: 55 56
+        on right: 62
+    Statement <node> (76)
+        on left: 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76
+        on right: 12
+
+
+State 0
+
+    0 $accept: • goal $end
+
+    $default  reduce using rule 3 (VarList)
+
+    goal        go to state 1
+    testScript  go to state 2
+    VarList     go to state 3
+
+
+State 1
+
+    0 $accept: goal • $end
+
+    $end  shift, and go to state 4
+
+
+State 2
+
+    1 goal: testScript •
+
+    $default  reduce using rule 1 (goal)
+
+
+State 3
+
+    2 testScript: VarList • RoutineList TestList
+    4 VarList: VarList • VariableAssign
+
+    identifier  shift, and go to state 5
+
+    $default  reduce using rule 6 (RoutineList)
+
+    RoutineList     go to state 6
+    VariableAssign  go to state 7
+
+
+State 4
+
+    0 $accept: goal $end •
+
+    $default  accept
+
+
+State 5
+
+   36 VariableAssign: identifier • '=' Exp ';'
+   37               | identifier • Index '=' Exp ';'
+   38               | identifier • '.' length '=' Exp ';'
+
+    '['  shift, and go to state 8
+    '='  shift, and go to state 9
+    '.'  shift, and go to state 10
+
+    Index  go to state 11
+
+
+State 6
+
+    2 testScript: VarList RoutineList • TestList
+    5 RoutineList: RoutineList • Routine
+
+    routine  shift, and go to state 12
+
+    $default  reduce using rule 9 (TestList)
+
+    Routine   go to state 13
+    TestList  go to state 14
+
+
+State 7
+
+    4 VarList: VarList VariableAssign •
+
+    $default  reduce using rule 4 (VarList)
+
+
+State 8
+
+   18 Index: '[' • Exp ']'
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 23
+
+
+State 9
+
+   36 VariableAssign: identifier '=' • Exp ';'
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 24
+
+
+State 10
+
+   38 VariableAssign: identifier '.' • length '=' Exp ';'
+
+    length  shift, and go to state 25
+
+
+State 11
+
+   37 VariableAssign: identifier Index • '=' Exp ';'
+
+    '='  shift, and go to state 26
+
+
+State 12
+
+    7 Routine: routine • stringLiteral '{' StatementList '}'
+
+    stringLiteral  shift, and go to state 27
+
+
+State 13
+
+    5 RoutineList: RoutineList Routine •
+
+    $default  reduce using rule 5 (RoutineList)
+
+
+State 14
+
+    2 testScript: VarList RoutineList TestList •
+    8 TestList: TestList • Test
+
+    test  shift, and go to state 28
+
+    $default  reduce using rule 2 (testScript)
+
+    Test  go to state 29
+
+
+State 15
+
+   35 Exp: '(' • Exp ')'
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 30
+
+
+State 16
+
+   30 Exp: stringLiteral •
+
+    $default  reduce using rule 30 (Exp)
+
+
+State 17
+
+   19 CanManip: identifier • Index
+   20         | identifier • '.' length
+   29 Exp: identifier •
+
+    '['  shift, and go to state 8
+    '.'  shift, and go to state 31
+
+    $default  reduce using rule 29 (Exp)
+
+    Index  go to state 32
+
+
+State 18
+
+   33 Exp: can_msg •
+
+    $default  reduce using rule 33 (Exp)
+
+
+State 19
+
+   34 Exp: add • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 33
+
+
+State 20
+
+   31 Exp: integerLiteral •
+
+    $default  reduce using rule 31 (Exp)
+
+
+State 21
+
+   32 Exp: hexLiteral •
+
+    $default  reduce using rule 32 (Exp)
+
+
+State 22
+
+   21 Exp: CanManip •
+
+    $default  reduce using rule 21 (Exp)
+
+
+State 23
+
+   18 Index: '[' Exp • ']'
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+    ']'         shift, and go to state 41
+
+
+State 24
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   36 VariableAssign: identifier '=' Exp • ';'
+
+    ';'         shift, and go to state 42
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+
+State 25
+
+   38 VariableAssign: identifier '.' length • '=' Exp ';'
+
+    '='  shift, and go to state 43
+
+
+State 26
+
+   37 VariableAssign: identifier Index '=' • Exp ';'
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 44
+
+
+State 27
+
+    7 Routine: routine stringLiteral • '{' StatementList '}'
+
+    '{'  shift, and go to state 45
+
+
+State 28
+
+   10 Test: test • stringLiteral '{' StatementList '}'
+
+    stringLiteral  shift, and go to state 46
+
+
+State 29
+
+    8 TestList: TestList Test •
+
+    $default  reduce using rule 8 (TestList)
+
+
+State 30
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   35    | '(' Exp • ')'
+
+    ')'         shift, and go to state 47
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+
+State 31
+
+   20 CanManip: identifier '.' • length
+
+    length  shift, and go to state 48
+
+
+State 32
+
+   19 CanManip: identifier Index •
+
+    $default  reduce using rule 19 (CanManip)
+
+
+State 33
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   34    | add Exp •
+
+    mult  shift, and go to state 35
+
+    $default  reduce using rule 34 (Exp)
+
+
+State 34
+
+   22 Exp: Exp add • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 49
+
+
+State 35
+
+   23 Exp: Exp mult • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 50
+
+
+State 36
+
+   26 Exp: Exp comparison • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 51
+
+
+State 37
+
+   27 Exp: Exp andToken • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 52
+
+
+State 38
+
+   28 Exp: Exp orToken • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 53
+
+
+State 39
+
+   24 Exp: Exp NE • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 54
+
+
+State 40
+
+   25 Exp: Exp EQ • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 55
+
+
+State 41
+
+   18 Index: '[' Exp ']' •
+
+    $default  reduce using rule 18 (Index)
+
+
+State 42
+
+   36 VariableAssign: identifier '=' Exp ';' •
+
+    $default  reduce using rule 36 (VariableAssign)
+
+
+State 43
+
+   38 VariableAssign: identifier '.' length '=' • Exp ';'
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 56
+
+
+State 44
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   37 VariableAssign: identifier Index '=' Exp • ';'
+
+    ';'         shift, and go to state 57
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+
+State 45
+
+    7 Routine: routine stringLiteral '{' • StatementList '}'
+
+    $default  reduce using rule 11 (StatementList)
+
+    StatementList  go to state 58
+
+
+State 46
+
+   10 Test: test stringLiteral • '{' StatementList '}'
+
+    '{'  shift, and go to state 59
+
+
+State 47
+
+   35 Exp: '(' Exp ')' •
+
+    $default  reduce using rule 35 (Exp)
+
+
+State 48
+
+   20 CanManip: identifier '.' length •
+
+    $default  reduce using rule 20 (CanManip)
+
+
+State 49
+
+   22 Exp: Exp • add Exp
+   22    | Exp add Exp •
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    mult  shift, and go to state 35
+
+    $default  reduce using rule 22 (Exp)
+
+
+State 50
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   23    | Exp mult Exp •
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    $default  reduce using rule 23 (Exp)
+
+
+State 51
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   26    | Exp comparison Exp •
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add   shift, and go to state 34
+    mult  shift, and go to state 35
+
+    comparison  error (nonassociative)
+
+    $default  reduce using rule 26 (Exp)
+
+
+State 52
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   27    | Exp andToken Exp •
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+
+    $default  reduce using rule 27 (Exp)
+
+
+State 53
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   28    | Exp orToken Exp •
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+
+    $default  reduce using rule 28 (Exp)
+
+
+State 54
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   24    | Exp NE Exp •
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+
+    $default  reduce using rule 24 (Exp)
+
+
+State 55
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   25    | Exp EQ Exp •
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+
+    $default  reduce using rule 25 (Exp)
+
+
+State 56
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   38 VariableAssign: identifier '.' length '=' Exp • ';'
+
+    ';'         shift, and go to state 60
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+
+State 57
+
+   37 VariableAssign: identifier Index '=' Exp ';' •
+
+    $default  reduce using rule 37 (VariableAssign)
+
+
+State 58
+
+    7 Routine: routine stringLiteral '{' StatementList • '}'
+   12 StatementList: StatementList • Statement
+
+    error           shift, and go to state 61
+    loop            shift, and go to state 62
+    delay           shift, and go to state 63
+    read_pin        shift, and go to state 64
+    set_pin         shift, and go to state 65
+    perrint         shift, and go to state 66
+    perrintln       shift, and go to state 67
+    expect          shift, and go to state 68
+    exit_tok        shift, and go to state 69
+    prompt          shift, and go to state 70
+    read_msg        shift, and go to state 71
+    send_msg        shift, and go to state 72
+    call            shift, and go to state 73
+    '('             shift, and go to state 15
+    '}'             shift, and go to state 74
+    serialRx        shift, and go to state 75
+    serialTx        shift, and go to state 76
+    assert          shift, and go to state 77
+    If              shift, and go to state 78
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 79
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    ExpectCall      go to state 80
+    PromptCall      go to state 81
+    PrintCall       go to state 82
+    CanManip        go to state 22
+    Exp             go to state 83
+    VariableAssign  go to state 84
+    SendMsgCall     go to state 85
+    ReadMsgCall     go to state 86
+    ReadPinCall     go to state 87
+    SetPinCall      go to state 88
+    DelayCall       go to state 89
+    LoopCall        go to state 90
+    Statement       go to state 91
+
+
+State 59
+
+   10 Test: test stringLiteral '{' • StatementList '}'
+
+    $default  reduce using rule 11 (StatementList)
+
+    StatementList  go to state 92
+
+
+State 60
+
+   38 VariableAssign: identifier '.' length '=' Exp ';' •
+
+    $default  reduce using rule 38 (VariableAssign)
+
+
+State 61
+
+   57 Statement: error • ';'
+
+    ';'  shift, and go to state 93
+
+
+State 62
+
+   55 LoopCall: loop • Exp '{' StatementList '}'
+   56         | loop • forever '{' StatementList '}'
+
+    forever         shift, and go to state 94
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 95
+
+
+State 63
+
+   54 DelayCall: delay • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 96
+
+
+State 64
+
+   43 ReadPinCall: read_pin • ain integerLiteral
+   44            | read_pin • ain identifier
+   45            | read_pin • din integerLiteral
+   46            | read_pin • din identifier
+
+    din  shift, and go to state 97
+    ain  shift, and go to state 98
+
+
+State 65
+
+   51 SetPinCall: set_pin • aout SetAnalogTail
+   52           | set_pin • dout integerLiteral dstate
+   53           | set_pin • dout identifier dstate
+
+    dout  shift, and go to state 99
+    aout  shift, and go to state 100
+
+
+State 66
+
+   16 PrintCall: perrint • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 101
+
+
+State 67
+
+   17 PrintCall: perrintln • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 102
+
+
+State 68
+
+   13 ExpectCall: expect • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 103
+
+
+State 69
+
+   73 Statement: exit_tok • ';'
+   74          | exit_tok • stringLiteral ';'
+
+    ';'            shift, and go to state 104
+    stringLiteral  shift, and go to state 105
+
+
+State 70
+
+   15 PromptCall: prompt • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 106
+
+
+State 71
+
+   41 ReadMsgCall: read_msg • hexLiteral
+   42            | read_msg • identifier
+
+    identifier  shift, and go to state 107
+    hexLiteral  shift, and go to state 108
+
+
+State 72
+
+   39 SendMsgCall: send_msg • hexLiteral Exp
+   40            | send_msg • identifier Exp
+
+    identifier  shift, and go to state 109
+    hexLiteral  shift, and go to state 110
+
+
+State 73
+
+   61 Statement: call • stringLiteral ';'
+
+    stringLiteral  shift, and go to state 111
+
+
+State 74
+
+    7 Routine: routine stringLiteral '{' StatementList '}' •
+
+    $default  reduce using rule 7 (Routine)
+
+
+State 75
+
+   72 Statement: serialRx • ';'
+
+    ';'  shift, and go to state 112
+
+
+State 76
+
+   71 Statement: serialTx • Exp ';'
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 113
+
+
+State 77
+
+   14 ExpectCall: assert • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 114
+
+
+State 78
+
+   58 Statement: If • '(' Exp ')' '{' StatementList '}'
+   59          | If • '(' Exp ')' '{' StatementList '}' Else '{' StatementList '}'
+
+    '('  shift, and go to state 115
+
+
+State 79
+
+   19 CanManip: identifier • Index
+   20         | identifier • '.' length
+   29 Exp: identifier •
+   36 VariableAssign: identifier • '=' Exp ';'
+   37               | identifier • Index '=' Exp ';'
+   38               | identifier • '.' length '=' Exp ';'
+
+    '['  shift, and go to state 8
+    '='  shift, and go to state 9
+    '.'  shift, and go to state 116
+
+    $default  reduce using rule 29 (Exp)
+
+    Index  go to state 117
+
+
+State 80
+
+   65 Statement: ExpectCall • ';'
+
+    ';'  shift, and go to state 118
+
+
+State 81
+
+   70 Statement: PromptCall • ';'
+
+    ';'  shift, and go to state 119
+
+
+State 82
+
+   66 Statement: PrintCall • ';'
+
+    ';'  shift, and go to state 120
+
+
+State 83
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   75 Statement: Exp • plusplus ';'
+   76          | Exp • minusminus ';'
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+    plusplus    shift, and go to state 121
+    minusminus  shift, and go to state 122
+
+
+State 84
+
+   60 Statement: VariableAssign •
+
+    $default  reduce using rule 60 (Statement)
+
+
+State 85
+
+   67 Statement: SendMsgCall • ';'
+
+    ';'  shift, and go to state 123
+
+
+State 86
+
+   68 Statement: ReadMsgCall • ';'
+
+    ';'  shift, and go to state 124
+
+
+State 87
+
+   64 Statement: ReadPinCall • ';'
+
+    ';'  shift, and go to state 125
+
+
+State 88
+
+   63 Statement: SetPinCall • ';'
+
+    ';'  shift, and go to state 126
+
+
+State 89
+
+   69 Statement: DelayCall • ';'
+
+    ';'  shift, and go to state 127
+
+
+State 90
+
+   62 Statement: LoopCall •
+
+    $default  reduce using rule 62 (Statement)
+
+
+State 91
+
+   12 StatementList: StatementList Statement •
+
+    $default  reduce using rule 12 (StatementList)
+
+
+State 92
+
+   10 Test: test stringLiteral '{' StatementList • '}'
+   12 StatementList: StatementList • Statement
+
+    error           shift, and go to state 61
+    loop            shift, and go to state 62
+    delay           shift, and go to state 63
+    read_pin        shift, and go to state 64
+    set_pin         shift, and go to state 65
+    perrint         shift, and go to state 66
+    perrintln       shift, and go to state 67
+    expect          shift, and go to state 68
+    exit_tok        shift, and go to state 69
+    prompt          shift, and go to state 70
+    read_msg        shift, and go to state 71
+    send_msg        shift, and go to state 72
+    call            shift, and go to state 73
+    '('             shift, and go to state 15
+    '}'             shift, and go to state 128
+    serialRx        shift, and go to state 75
+    serialTx        shift, and go to state 76
+    assert          shift, and go to state 77
+    If              shift, and go to state 78
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 79
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    ExpectCall      go to state 80
+    PromptCall      go to state 81
+    PrintCall       go to state 82
+    CanManip        go to state 22
+    Exp             go to state 83
+    VariableAssign  go to state 84
+    SendMsgCall     go to state 85
+    ReadMsgCall     go to state 86
+    ReadPinCall     go to state 87
+    SetPinCall      go to state 88
+    DelayCall       go to state 89
+    LoopCall        go to state 90
+    Statement       go to state 91
+
+
+State 93
+
+   57 Statement: error ';' •
+
+    $default  reduce using rule 57 (Statement)
+
+
+State 94
+
+   56 LoopCall: loop forever • '{' StatementList '}'
+
+    '{'  shift, and go to state 129
+
+
+State 95
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   55 LoopCall: loop Exp • '{' StatementList '}'
+
+    '{'         shift, and go to state 130
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+
+State 96
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   54 DelayCall: delay Exp •
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 54 (DelayCall)
+
+
+State 97
+
+   45 ReadPinCall: read_pin din • integerLiteral
+   46            | read_pin din • identifier
+
+    identifier      shift, and go to state 131
+    integerLiteral  shift, and go to state 132
+
+
+State 98
+
+   43 ReadPinCall: read_pin ain • integerLiteral
+   44            | read_pin ain • identifier
+
+    identifier      shift, and go to state 133
+    integerLiteral  shift, and go to state 134
+
+
+State 99
+
+   52 SetPinCall: set_pin dout • integerLiteral dstate
+   53           | set_pin dout • identifier dstate
+
+    identifier      shift, and go to state 135
+    integerLiteral  shift, and go to state 136
+
+
+State 100
+
+   51 SetPinCall: set_pin aout • SetAnalogTail
+
+    identifier      shift, and go to state 137
+    integerLiteral  shift, and go to state 138
+
+    SetAnalogTail  go to state 139
+
+
+State 101
+
+   16 PrintCall: perrint Exp •
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 16 (PrintCall)
+
+
+State 102
+
+   17 PrintCall: perrintln Exp •
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 17 (PrintCall)
+
+
+State 103
+
+   13 ExpectCall: expect Exp •
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 13 (ExpectCall)
+
+
+State 104
+
+   73 Statement: exit_tok ';' •
+
+    $default  reduce using rule 73 (Statement)
+
+
+State 105
+
+   74 Statement: exit_tok stringLiteral • ';'
+
+    ';'  shift, and go to state 140
+
+
+State 106
+
+   15 PromptCall: prompt Exp •
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 15 (PromptCall)
+
+
+State 107
+
+   42 ReadMsgCall: read_msg identifier •
+
+    $default  reduce using rule 42 (ReadMsgCall)
+
+
+State 108
+
+   41 ReadMsgCall: read_msg hexLiteral •
+
+    $default  reduce using rule 41 (ReadMsgCall)
+
+
+State 109
+
+   40 SendMsgCall: send_msg identifier • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 141
+
+
+State 110
+
+   39 SendMsgCall: send_msg hexLiteral • Exp
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 142
+
+
+State 111
+
+   61 Statement: call stringLiteral • ';'
+
+    ';'  shift, and go to state 143
+
+
+State 112
+
+   72 Statement: serialRx ';' •
+
+    $default  reduce using rule 72 (Statement)
+
+
+State 113
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   71 Statement: serialTx Exp • ';'
+
+    ';'         shift, and go to state 144
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+
+State 114
+
+   14 ExpectCall: assert Exp •
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 14 (ExpectCall)
+
+
+State 115
+
+   58 Statement: If '(' • Exp ')' '{' StatementList '}'
+   59          | If '(' • Exp ')' '{' StatementList '}' Else '{' StatementList '}'
+
+    '('             shift, and go to state 15
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 17
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    CanManip  go to state 22
+    Exp       go to state 145
+
+
+State 116
+
+   20 CanManip: identifier '.' • length
+   38 VariableAssign: identifier '.' • length '=' Exp ';'
+
+    length  shift, and go to state 146
+
+
+State 117
+
+   19 CanManip: identifier Index •
+   37 VariableAssign: identifier Index • '=' Exp ';'
+
+    '='  shift, and go to state 26
+
+    $default  reduce using rule 19 (CanManip)
+
+
+State 118
+
+   65 Statement: ExpectCall ';' •
+
+    $default  reduce using rule 65 (Statement)
+
+
+State 119
+
+   70 Statement: PromptCall ';' •
+
+    $default  reduce using rule 70 (Statement)
+
+
+State 120
+
+   66 Statement: PrintCall ';' •
+
+    $default  reduce using rule 66 (Statement)
+
+
+State 121
+
+   75 Statement: Exp plusplus • ';'
+
+    ';'  shift, and go to state 147
+
+
+State 122
+
+   76 Statement: Exp minusminus • ';'
+
+    ';'  shift, and go to state 148
+
+
+State 123
+
+   67 Statement: SendMsgCall ';' •
+
+    $default  reduce using rule 67 (Statement)
+
+
+State 124
+
+   68 Statement: ReadMsgCall ';' •
+
+    $default  reduce using rule 68 (Statement)
+
+
+State 125
+
+   64 Statement: ReadPinCall ';' •
+
+    $default  reduce using rule 64 (Statement)
+
+
+State 126
+
+   63 Statement: SetPinCall ';' •
+
+    $default  reduce using rule 63 (Statement)
+
+
+State 127
+
+   69 Statement: DelayCall ';' •
+
+    $default  reduce using rule 69 (Statement)
+
+
+State 128
+
+   10 Test: test stringLiteral '{' StatementList '}' •
+
+    $default  reduce using rule 10 (Test)
+
+
+State 129
+
+   56 LoopCall: loop forever '{' • StatementList '}'
+
+    $default  reduce using rule 11 (StatementList)
+
+    StatementList  go to state 149
+
+
+State 130
+
+   55 LoopCall: loop Exp '{' • StatementList '}'
+
+    $default  reduce using rule 11 (StatementList)
+
+    StatementList  go to state 150
+
+
+State 131
+
+   46 ReadPinCall: read_pin din identifier •
+
+    $default  reduce using rule 46 (ReadPinCall)
+
+
+State 132
+
+   45 ReadPinCall: read_pin din integerLiteral •
+
+    $default  reduce using rule 45 (ReadPinCall)
+
+
+State 133
+
+   44 ReadPinCall: read_pin ain identifier •
+
+    $default  reduce using rule 44 (ReadPinCall)
+
+
+State 134
+
+   43 ReadPinCall: read_pin ain integerLiteral •
+
+    $default  reduce using rule 43 (ReadPinCall)
+
+
+State 135
+
+   53 SetPinCall: set_pin dout identifier • dstate
+
+    dstate  shift, and go to state 151
+
+
+State 136
+
+   52 SetPinCall: set_pin dout integerLiteral • dstate
+
+    dstate  shift, and go to state 152
+
+
+State 137
+
+   48 SetAnalogTail: identifier • identifier
+   49              | identifier • integerLiteral
+
+    identifier      shift, and go to state 153
+    integerLiteral  shift, and go to state 154
+
+
+State 138
+
+   47 SetAnalogTail: integerLiteral • identifier
+   50              | integerLiteral • integerLiteral
+
+    identifier      shift, and go to state 155
+    integerLiteral  shift, and go to state 156
+
+
+State 139
+
+   51 SetPinCall: set_pin aout SetAnalogTail •
+
+    $default  reduce using rule 51 (SetPinCall)
+
+
+State 140
+
+   74 Statement: exit_tok stringLiteral ';' •
+
+    $default  reduce using rule 74 (Statement)
+
+
+State 141
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   40 SendMsgCall: send_msg identifier Exp •
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 40 (SendMsgCall)
+
+
+State 142
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   39 SendMsgCall: send_msg hexLiteral Exp •
+
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+    $default  reduce using rule 39 (SendMsgCall)
+
+
+State 143
+
+   61 Statement: call stringLiteral ';' •
+
+    $default  reduce using rule 61 (Statement)
+
+
+State 144
+
+   71 Statement: serialTx Exp ';' •
+
+    $default  reduce using rule 71 (Statement)
+
+
+State 145
+
+   22 Exp: Exp • add Exp
+   23    | Exp • mult Exp
+   24    | Exp • NE Exp
+   25    | Exp • EQ Exp
+   26    | Exp • comparison Exp
+   27    | Exp • andToken Exp
+   28    | Exp • orToken Exp
+   58 Statement: If '(' Exp • ')' '{' StatementList '}'
+   59          | If '(' Exp • ')' '{' StatementList '}' Else '{' StatementList '}'
+
+    ')'         shift, and go to state 157
+    add         shift, and go to state 34
+    mult        shift, and go to state 35
+    comparison  shift, and go to state 36
+    andToken    shift, and go to state 37
+    orToken     shift, and go to state 38
+    NE          shift, and go to state 39
+    EQ          shift, and go to state 40
+
+
+State 146
+
+   20 CanManip: identifier '.' length •
+   38 VariableAssign: identifier '.' length • '=' Exp ';'
+
+    '='  shift, and go to state 43
+
+    $default  reduce using rule 20 (CanManip)
+
+
+State 147
+
+   75 Statement: Exp plusplus ';' •
+
+    $default  reduce using rule 75 (Statement)
+
+
+State 148
+
+   76 Statement: Exp minusminus ';' •
+
+    $default  reduce using rule 76 (Statement)
+
+
+State 149
+
+   12 StatementList: StatementList • Statement
+   56 LoopCall: loop forever '{' StatementList • '}'
+
+    error           shift, and go to state 61
+    loop            shift, and go to state 62
+    delay           shift, and go to state 63
+    read_pin        shift, and go to state 64
+    set_pin         shift, and go to state 65
+    perrint         shift, and go to state 66
+    perrintln       shift, and go to state 67
+    expect          shift, and go to state 68
+    exit_tok        shift, and go to state 69
+    prompt          shift, and go to state 70
+    read_msg        shift, and go to state 71
+    send_msg        shift, and go to state 72
+    call            shift, and go to state 73
+    '('             shift, and go to state 15
+    '}'             shift, and go to state 158
+    serialRx        shift, and go to state 75
+    serialTx        shift, and go to state 76
+    assert          shift, and go to state 77
+    If              shift, and go to state 78
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 79
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    ExpectCall      go to state 80
+    PromptCall      go to state 81
+    PrintCall       go to state 82
+    CanManip        go to state 22
+    Exp             go to state 83
+    VariableAssign  go to state 84
+    SendMsgCall     go to state 85
+    ReadMsgCall     go to state 86
+    ReadPinCall     go to state 87
+    SetPinCall      go to state 88
+    DelayCall       go to state 89
+    LoopCall        go to state 90
+    Statement       go to state 91
+
+
+State 150
+
+   12 StatementList: StatementList • Statement
+   55 LoopCall: loop Exp '{' StatementList • '}'
+
+    error           shift, and go to state 61
+    loop            shift, and go to state 62
+    delay           shift, and go to state 63
+    read_pin        shift, and go to state 64
+    set_pin         shift, and go to state 65
+    perrint         shift, and go to state 66
+    perrintln       shift, and go to state 67
+    expect          shift, and go to state 68
+    exit_tok        shift, and go to state 69
+    prompt          shift, and go to state 70
+    read_msg        shift, and go to state 71
+    send_msg        shift, and go to state 72
+    call            shift, and go to state 73
+    '('             shift, and go to state 15
+    '}'             shift, and go to state 159
+    serialRx        shift, and go to state 75
+    serialTx        shift, and go to state 76
+    assert          shift, and go to state 77
+    If              shift, and go to state 78
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 79
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    ExpectCall      go to state 80
+    PromptCall      go to state 81
+    PrintCall       go to state 82
+    CanManip        go to state 22
+    Exp             go to state 83
+    VariableAssign  go to state 84
+    SendMsgCall     go to state 85
+    ReadMsgCall     go to state 86
+    ReadPinCall     go to state 87
+    SetPinCall      go to state 88
+    DelayCall       go to state 89
+    LoopCall        go to state 90
+    Statement       go to state 91
+
+
+State 151
+
+   53 SetPinCall: set_pin dout identifier dstate •
+
+    $default  reduce using rule 53 (SetPinCall)
+
+
+State 152
+
+   52 SetPinCall: set_pin dout integerLiteral dstate •
+
+    $default  reduce using rule 52 (SetPinCall)
+
+
+State 153
+
+   48 SetAnalogTail: identifier identifier •
+
+    $default  reduce using rule 48 (SetAnalogTail)
+
+
+State 154
+
+   49 SetAnalogTail: identifier integerLiteral •
+
+    $default  reduce using rule 49 (SetAnalogTail)
+
+
+State 155
+
+   47 SetAnalogTail: integerLiteral identifier •
+
+    $default  reduce using rule 47 (SetAnalogTail)
+
+
+State 156
+
+   50 SetAnalogTail: integerLiteral integerLiteral •
+
+    $default  reduce using rule 50 (SetAnalogTail)
+
+
+State 157
+
+   58 Statement: If '(' Exp ')' • '{' StatementList '}'
+   59          | If '(' Exp ')' • '{' StatementList '}' Else '{' StatementList '}'
+
+    '{'  shift, and go to state 160
+
+
+State 158
+
+   56 LoopCall: loop forever '{' StatementList '}' •
+
+    $default  reduce using rule 56 (LoopCall)
+
+
+State 159
+
+   55 LoopCall: loop Exp '{' StatementList '}' •
+
+    $default  reduce using rule 55 (LoopCall)
+
+
+State 160
+
+   58 Statement: If '(' Exp ')' '{' • StatementList '}'
+   59          | If '(' Exp ')' '{' • StatementList '}' Else '{' StatementList '}'
+
+    $default  reduce using rule 11 (StatementList)
+
+    StatementList  go to state 161
+
+
+State 161
+
+   12 StatementList: StatementList • Statement
+   58 Statement: If '(' Exp ')' '{' StatementList • '}'
+   59          | If '(' Exp ')' '{' StatementList • '}' Else '{' StatementList '}'
+
+    error           shift, and go to state 61
+    loop            shift, and go to state 62
+    delay           shift, and go to state 63
+    read_pin        shift, and go to state 64
+    set_pin         shift, and go to state 65
+    perrint         shift, and go to state 66
+    perrintln       shift, and go to state 67
+    expect          shift, and go to state 68
+    exit_tok        shift, and go to state 69
+    prompt          shift, and go to state 70
+    read_msg        shift, and go to state 71
+    send_msg        shift, and go to state 72
+    call            shift, and go to state 73
+    '('             shift, and go to state 15
+    '}'             shift, and go to state 162
+    serialRx        shift, and go to state 75
+    serialTx        shift, and go to state 76
+    assert          shift, and go to state 77
+    If              shift, and go to state 78
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 79
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    ExpectCall      go to state 80
+    PromptCall      go to state 81
+    PrintCall       go to state 82
+    CanManip        go to state 22
+    Exp             go to state 83
+    VariableAssign  go to state 84
+    SendMsgCall     go to state 85
+    ReadMsgCall     go to state 86
+    ReadPinCall     go to state 87
+    SetPinCall      go to state 88
+    DelayCall       go to state 89
+    LoopCall        go to state 90
+    Statement       go to state 91
+
+
+State 162
+
+   58 Statement: If '(' Exp ')' '{' StatementList '}' •
+   59          | If '(' Exp ')' '{' StatementList '}' • Else '{' StatementList '}'
+
+    Else  shift, and go to state 163
+
+    $default  reduce using rule 58 (Statement)
+
+
+State 163
+
+   59 Statement: If '(' Exp ')' '{' StatementList '}' Else • '{' StatementList '}'
+
+    '{'  shift, and go to state 164
+
+
+State 164
+
+   59 Statement: If '(' Exp ')' '{' StatementList '}' Else '{' • StatementList '}'
+
+    $default  reduce using rule 11 (StatementList)
+
+    StatementList  go to state 165
+
+
+State 165
+
+   12 StatementList: StatementList • Statement
+   59 Statement: If '(' Exp ')' '{' StatementList '}' Else '{' StatementList • '}'
+
+    error           shift, and go to state 61
+    loop            shift, and go to state 62
+    delay           shift, and go to state 63
+    read_pin        shift, and go to state 64
+    set_pin         shift, and go to state 65
+    perrint         shift, and go to state 66
+    perrintln       shift, and go to state 67
+    expect          shift, and go to state 68
+    exit_tok        shift, and go to state 69
+    prompt          shift, and go to state 70
+    read_msg        shift, and go to state 71
+    send_msg        shift, and go to state 72
+    call            shift, and go to state 73
+    '('             shift, and go to state 15
+    '}'             shift, and go to state 166
+    serialRx        shift, and go to state 75
+    serialTx        shift, and go to state 76
+    assert          shift, and go to state 77
+    If              shift, and go to state 78
+    stringLiteral   shift, and go to state 16
+    identifier      shift, and go to state 79
+    can_msg         shift, and go to state 18
+    add             shift, and go to state 19
+    integerLiteral  shift, and go to state 20
+    hexLiteral      shift, and go to state 21
+
+    ExpectCall      go to state 80
+    PromptCall      go to state 81
+    PrintCall       go to state 82
+    CanManip        go to state 22
+    Exp             go to state 83
+    VariableAssign  go to state 84
+    SendMsgCall     go to state 85
+    ReadMsgCall     go to state 86
+    ReadPinCall     go to state 87
+    SetPinCall      go to state 88
+    DelayCall       go to state 89
+    LoopCall        go to state 90
+    Statement       go to state 91
+
+
+State 166
+
+   59 Statement: If '(' Exp ')' '{' StatementList '}' Else '{' StatementList '}' •
+
+    $default  reduce using rule 59 (Statement)

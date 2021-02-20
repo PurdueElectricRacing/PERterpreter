@@ -1,3 +1,12 @@
+# Cloning this repo
+To clone this repository, run the following command as this project makes use of git submodules.
+
+`git clone --recurse-submodules https://github.com/PurdueElectricRacing/PERterpreter.git`
+
+Running the interpreter
+========================
+The executable is supposed to be built into the `./build` directory. You can run it from here by passing the arguments necessary, or you can add it to your path
+
 ## Language Grammar
 
 The following grammar is given in EBNF for the sake of easier understanding.

@@ -78,10 +78,12 @@ SOURCES = \
    $$PWD/src/synterr.cpp \
    $$PWD/src/type-checker.cpp \
 
+
+
 INCLUDEPATH = \
     $$PWD/inc
 
-include($$PWD/../CAN_API/canapi.pri)
+include($$PWD/DesktopCAN_API/canapi.pri)
 
 #DEFINES = 
 

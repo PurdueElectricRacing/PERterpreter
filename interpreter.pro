@@ -82,7 +82,7 @@ SOURCES = \
 INCLUDEPATH = \
     $$PWD/inc
 
-include($$PWD/../CAN_API/canapi.pri)
+include($$PWD/DesktopCAN_API/canapi.pri)
 
 #DEFINES = 
 

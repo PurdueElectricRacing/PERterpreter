@@ -227,10 +227,10 @@ test "this is a test" {
 
   set-pin DOUT 3 HIGH;
   delay 45;
-  read-pin DIN 4 ;  // read-x would store return result in some static variable, 
+  read-pin DIN 4;  // read-x would store return result in some static variable, 
                   // which would then be accessible forever by EXPECT and ASSERT
 
-  VAR = RETVAL    // RESULT will be a reserved keyword for the global static result variable
+  VAR = RETVAL;    // RESULT will be a reserved keyword for the global static result variable
 
   expect RETVAL GT 6;  // 
   prompt "Yo momma so fat that the tide comes in when she goes to the beach";
@@ -246,9 +246,11 @@ test "this is a test" {
 
 
 
+Arduino Communication
+===
+Flash the `CommandParser.ino` file to an Arduino. Located in `Testbench-Arduino/`
 
-Arduino Serial communication protocol
-=====================================================
+### Arduino Serial communication protocol
 
 `GPIO_MAX` = max number of gpio pins on the Arduino
 
@@ -274,6 +276,8 @@ Arduino Serial communication protocol
     * `GPIO`: This is a simple GPIO write of the digital pins
   * `PIN`: up to DAC_MAX
   * `PIN`: up to GPIO_MA
+
+
 
 
 Compiling

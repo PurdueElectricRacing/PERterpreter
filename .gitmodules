@@ -1,3 +1,6 @@
 [submodule "DesktopCAN_API"]
 	path = DesktopCAN_API
 	url = https://github.com/PurdueElectricRacing/DesktopCAN_API.git
+[submodule "Testbench-Arduino"]
+	path = Testbench-Arduino
+	url = https://github.com/PurdueElectricRacing/Testbench-Arduino.git

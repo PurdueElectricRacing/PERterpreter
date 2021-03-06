@@ -22,7 +22,7 @@ int main (int argc, char ** argv)
   };
 
   bool verb = false, syntax_check = false;
-  bool good_syntax = false, no_gpio = false;
+  bool good_syntax = false, no_gpio = false, no_can = false;
   int baud = 500000;
 try
 {
@@ -94,6 +94,12 @@ try
                 "functions is called with this switch passed, an exception "
                 "will be thrown and the program will terminate.",
                 value<bool>(no_gpio))
+    ("no-can", "Passing this switch will disable the requirement for having"
+               "a CAN device attached. Only use this if your script makes no "
+               "calls to send-msg or read-msg. If one of these "
+               "functions is called with this switch passed, an exception "
+               "will be thrown and the program will terminate.",
+               value<bool>(no_can))
     
     ;
   
@@ -196,10 +202,19 @@ try
                  " functions will throw exceptions.\n";
   }
 
-  candev = NewCanDevice(baud);
-  candev->Open();
 
-  p.setCanInterface(candev);
+  if (!no_can)
+  {
+    candev = NewCanDevice(baud);
+    candev->Open();
+
+    p.setCanInterface(candev);
+  }
+  else
+  {
+    std::cout << "\n\nno-can switch specified. Any calls to read-msg or"
+                 " send-msg will raise an exception.\n";
+  }
 
   if (!logfile.empty())
   {

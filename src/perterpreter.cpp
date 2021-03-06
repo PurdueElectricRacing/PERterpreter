@@ -333,6 +333,7 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
 {
   Node * delay = node->children[0];
   size_t delayval = 0;
+  QTimer timer;
 
   if (delay->isLiteral())
   {
@@ -349,7 +350,15 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
     qDebug() << "\nDelaying execution for" << delayval << "ms";
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(delayval));
+  timer.start(delayval);
+
+  while (timer.remainingTime() > 0)
+  {
+
+  }
+
+  timer.stop();
+  // std::this_thread::sleep_for(std::chrono::milliseconds(delayval));
 }
 
 
@@ -816,6 +825,11 @@ void Perterpreter::perterpretSendMsg(Node * node, SymbolTable * scope)
              << QString(("0x" + ss.str()).c_str()); 
   }
 
+  if (!can_if)
+  {
+    throw CANDeviceNotConnected;
+  }
+
   can_if->writeCanData(address->value, msg->Len(), msg->Data());
 }
 
@@ -836,6 +850,11 @@ void Perterpreter::perterpretReadMsg(Node * node, SymbolTable * scope)
     // go ahead and read once, then set a timer for later
     qDebug() << "\nReading from CAN bus. Expecting to receive a message from" 
              << QString(("0x" + ss.str()).c_str());  // this is whack yo
+  }
+
+  if (!can_if)
+  {
+    throw CANDeviceNotConnected;
   }
 
   CanFrame frame = can_if->readCanData();

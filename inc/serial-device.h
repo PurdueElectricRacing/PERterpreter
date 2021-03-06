@@ -10,6 +10,7 @@
 
 
 #include <cstring>
+#include <thread>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <iostream>
@@ -68,11 +69,12 @@ public:
 
   void open() 
   {
-    device.open(QIODevice::ReadWrite);
+    device.setBaudRate(115200);
 
-    if (!device.isOpen())
+    if (!device.open(QIODevice::ReadWrite))
     {
-      std::cerr << "Error opening " << device.portName().toStdString() << "\n";
+      std::cerr << "Error opening " << device.portName().toStdString() << ": " 
+                << "\n";
     }
   };
 
@@ -125,7 +127,10 @@ public:
     if (default_open)
     {
       open();
+      qDebug() << "Delaying for 500ms because the Arduino is a butthole";
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
+
       
     return device.isOpen();
   };
@@ -194,8 +199,12 @@ public:
     if (device.isOpen())
     {
       qDebug() << "SerialDevice::sendCommand: Sending command" << cmd;
+      
+      if (device.write(cmd.toUtf8()) == -1)
+      {
+        std::cerr << "SerialDevice::sendCommand: error sending to device.\n";
+      }
 
-      device.write(cmd.toUtf8());
       device.waitForBytesWritten();
       return true;
     }  

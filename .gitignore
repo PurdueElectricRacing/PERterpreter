@@ -5,3 +5,5 @@ moc
 obj
 *.user
 .qmake*
+*.dot
+*.output

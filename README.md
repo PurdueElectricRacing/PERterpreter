@@ -70,10 +70,12 @@ VariableAssignment;
 ## Data Types
 There are 3 data types supported:
 `Integer:` An integer number
+
 `String:` Any sort of string of characters enclosed by `''` or `""`
+
 `CAN_Msg:` A series of integers separated by the `|` symbol. 
-    - Example: `can_var = 00|42|69|A4;`
-    - Bytes are represented as Hex literals without the preceding `0x` designator
+  - Example: `can_var = 00|42|69|A4;`
+  - Bytes are represented as Hex literals without the preceding `0x` designator
 
 Integers can be used as a form of implicit boolean type, so the following is correct and would function. The convention for boolean evaluation is the same as C/C++ style boolean evaluation based on ints
 
@@ -135,7 +137,7 @@ else
 
 
 `read-msg `     
-  - Will delay for 1 msec before fetching the most recent messages from a reader thread's cache
+  - Will read from the CAN bus for 1.5 seconds before timing out if a message from the specified address does not arrive in that time frame
   - The information returned by this will be stored in a global static variable
 
 
@@ -144,14 +146,11 @@ else
        ( or (LT | GT | GE | LE | NE | EQ) ([0-9]+ | CAN-Msg) )*
 
   - continue execution even if expectation is not met
-  - will print out what the expected value was, and what was actually returned if the values do not match the expectation provided
+  - Verbose printing is hard, so you will only know what line number the expectation failed on for now
 
 `assert`  same syntax as expect
   - die if expectation not met 
   - only terminates the running operation i.e. the currently executing test. Will not terminate the interpreter or any subsequent tests
-  - to be called after EXPECT
-  - utilizes the "expectation" variable which is set by a prior call to EXPECT
-    - calling ASSERT TRUE with no prior EXPECTS will result in script termination
 
 `exit` 
   - pretty much just for debugging
@@ -173,18 +172,12 @@ else
 
 
 
-- a CAN reader thread will be constantly running in the background of the interpreter
-- a global return variable will be auto-initialized to 0 at the beginning of every test routine. 
-  - This variable will be set by performing a READ-X operation
-
-
 - RETVAL will be a reserved keyword for the global static result variable
 - the interpreter will be invokable by the GUI and from the command line (an additional command line executable will be compiled)
 
 
 - It is not advised to make a routine call in the middle of test execution if the RETVAL is required for later usage, as this may cause overwriting of the value
 - PERScript is spacing inconsiderate, meaning spacing is unimportant, so long as tokens are distinguishable 
-- with the exception of RETVAL, all system defined global variables are to remain statically typed (i.e. SERIAL_LOG_FILE will always remain a string)
 
  
 PERterpreter commands
@@ -203,10 +196,10 @@ PERterpreter commands
     - For -R and -T, the order specified will be the order scripts are run in
   - `-b --baud`: the baud rate to use for the CAN device (only makes an impact on windows. If on Linux, use the `setup_can.sh` script). Defaults to 500kB
   - `--no-gpio`: Passing this switch will disable the requirement for selecting a serial GPIO device. Only use this if your script makes no calls to pin read or write functions. If one of these functions is called with this switch passed, an exception will be thrown and the program will terminate.
+  - `no-can`: Passing this switch will disable the requirement for having a CAN device attached. Only use this if your script makes no calls to send-msg or read-msg. If one of these functions is called with this switch passed, an exception will be thrown and the program will terminate.
 
 
-
-- Any devices which are communicating with the basic serial-tx/rx commands will need to send \r\n at the end of their message strings (for whatever reason Qt isn't emptying the buffers so it has to read all the things that it sent already possibly)
+- Any devices which are communicating with the basic serial-tx/rx commands will need to send \r\n at the end of their message strings 
 
 
 
@@ -216,6 +209,7 @@ Adding Language Features
 TODO
 https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwi7wem-gr3uAhXQK80KHS4YAzAQFjAFegQIBRAC&url=ftp%3A%2F%2Fftp.wayne.edu%2Fldp%2Fen%2FLex-YACC-HOWTO%2FLex-YACC-HOWTO-single.html&usg=AOvVaw1J-o-TSm9j18GTJWmV_1EI
 
+There's a lot going on here. good luck.
 
 
 
@@ -289,3 +283,7 @@ Compiling
 3. Add `C:\Qt\5.15.2\mingw81_64\bin` to your path
 4. Open the project in QtCreator and click on the hammer button to build it.
 
+
+Future developments
+===
+* Add the ability to actually print out the expectation for an expect/assert call instead of just the call failing

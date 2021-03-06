@@ -56,7 +56,7 @@ test "hello this is a test script" {
 
   var3 = 69;
   var4 = 1;
-  print "shit ";
+  print "poop ";
   println var4 + var4 + var4 + var4 + var4 + var4 + var4 + var4 + var4 + var4 * 5 * 5 / 3;
   // loop forever {  // should be ok  
   //   print "poop";
@@ -70,8 +70,12 @@ test "hello this is a test script" {
   {
     println "Boo";
   }
-
-  // set-pin DOUT 69 HIGH;
+  delay(1000);
+  set-pin DOUT 13 HIGH;
+  exit;
+  delay(1000);
+  read-pin DIN 13;
+  println "Pin 13 = " + RETVAL;
   // set-pin DOUT 69 LOW;
   // set-pin DOUT 69 HIGH;
   // delay 10000;

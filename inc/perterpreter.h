@@ -48,6 +48,7 @@ public:
       serial_device = misc;
     }
     data_map = datamap;
+    can_if = 0;
   }
 
   virtual ~Perterpreter() {

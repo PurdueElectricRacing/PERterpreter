@@ -3,6 +3,7 @@
 
 #include "serial-device.h"
 
+#include <thread>
 #include <iostream>
 #include <string>
 #include <QSerialPort>
@@ -37,6 +38,7 @@ public:
     QString msg = WRITE_GPIO + QString().setNum(pin) + " " 
                 + QString().setNum(value) + ";";
     sendCommand(msg);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(1));
   };
 
 
@@ -83,6 +85,7 @@ public:
     QString msg = WRITE_DAC + QString().setNum(pin) + " " 
                 + QString().setNum(value) + ";";
     sendCommand(msg);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
   };
 
 

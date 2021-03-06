@@ -41,7 +41,7 @@ public:
     while (last_sep != std::string::npos)
     {
       std::string byteval = input.substr(0, last_sep);
-      uint val = 0;
+      size_t val = 0;
       input.erase(0, last_sep + 1);
       byteval = "0x" + byteval;
       val = std::stoul(byteval, 0, 16);
@@ -82,7 +82,7 @@ public:
       // do not move this variable out of the loop
       // it needs re-init every iteration
       std::stringstream ss;
-      ss << std::hex << (uint) data[i];
+      ss << std::hex << (size_t) data[i];
       ret += ss.str();
       if (i < 7)
         ret += "|";
@@ -105,7 +105,7 @@ public:
     return len;
   }
 
-  uint8_t setData(uint index, uint val) 
+  uint8_t setData(size_t index, size_t val) 
   {
     if (index > len)
     {
@@ -115,7 +115,7 @@ public:
     return val;
   }
 
-  uint setLeng(uint8_t newlen) { 
+  size_t setLeng(uint8_t newlen) { 
     if (newlen <= 8) 
     {
       len = newlen; 

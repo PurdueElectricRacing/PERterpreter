@@ -10,11 +10,12 @@
 #include "perterpreter_exceptions.h"
 
 #include "can_api.h"
+#include "ghc/filesystem.hpp"
+
 
 #include <exception>
 #include <iostream>
 #include <fstream>
-#include <filesystem>
 #include <chrono>
 #include <thread>
 #include <memory>
@@ -69,7 +70,7 @@ void clearIntermediateOps(SymbolTable * scope)
 ///         functionality of the GUI
 void Perterpreter::createTemplateScript(std::string spath)
 {
-  using namespace std::filesystem;
+  using namespace ghc::filesystem;
   path p = canonical(path(spath));
   
   if (is_directory(p))
@@ -112,7 +113,7 @@ void Perterpreter::createTemplateScript(std::string spath)
 
 /// @brief: Perform the lexical analysis/parsing and type checking only
 /// @return: true on valid syntax, false on error
-bool Perterpreter::performSyntaxAnalysis(std::filesystem::path filepath)
+bool Perterpreter::performSyntaxAnalysis(ghc::filesystem::path filepath)
 {
   infilename = filepath.c_str();
   yyin = fopen(filepath.c_str(), "r");

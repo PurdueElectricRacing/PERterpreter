@@ -8,8 +8,8 @@
 #include "symbol-table.h"
 #include "gpio-interface.h"
 #include "can_api.h"
+#include "ghc/filesystem.hpp"
 
-#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <QSerialPort>
@@ -90,7 +90,7 @@ public:
   void setCanInterface(CanInterface * itf) { can_if = itf; };
   // TODO Create a pointer to a global buffer here for if interpreter is being used by test bench so it can still do live can logging
   void selectGpioDev();
-  bool performSyntaxAnalysis(std::filesystem::path filepath);
+  bool performSyntaxAnalysis(ghc::filesystem::path filepath);
 
   void setVerbose(int verb) {verbose = verb;};
   void createTemplateScript(std::string spath);

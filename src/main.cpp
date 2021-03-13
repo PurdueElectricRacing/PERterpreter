@@ -148,7 +148,7 @@ try
     exit(-1);
   }
 
-  if (!std::filesystem::exists(infile))
+  if (!ghc::filesystem::exists(infile))
   {
     std::cerr << "File not found \"" << infile << "\"\n";
     exit(-1);

@@ -11,7 +11,7 @@ enum obj_t
   integer,
   can_msg_obj,
   invalid,
-  boolean,
+  boolean_obj,
 };
 
 

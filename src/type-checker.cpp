@@ -78,7 +78,7 @@ bool checkTypes(Node * root, SymbolTable * currscope, Tests *tests, Routines *ro
     else if (type == loop_node)
     {
       obj_t param = checkSingleParamCmd(node, currscope);
-      if (param != boolean && param != integer)
+      if (param != boolean_obj && param != integer)
       {
         invalidParameters(param, nodeTypeToString(node->node_type), 
                           node->line_no);
@@ -127,10 +127,10 @@ bool checkIfElse(Node * node, SymbolTable * currscope, Tests *tests, Routines *r
   obj_t exptype = checkExp(node->children[0], currscope); 
   bool ret = true;
   
-  // can't have non-boolean types as conditions
-  if (exptype != boolean && exptype != integer && exptype != invalid)
+  // can't have non-boolean_obj types as conditions
+  if (exptype != boolean_obj && exptype != integer && exptype != invalid)
   {
-    mismatched_type(exptype, boolean, node->line_no, "if");
+    mismatched_type(exptype, boolean_obj, node->line_no, "if");
     return false;
   }
   ret = checkTypes(statements, currscope, tests, routines);
@@ -330,9 +330,9 @@ bool checkExpectAssert(Node * node, SymbolTable * currscope)
   Node * exp = node->children[0];
   exptype = checkExp(exp, currscope);
 
-  if (exptype != boolean)
+  if (exptype != boolean_obj)
   {
-    invalidParameters(exptype, boolean, node->data.strval, exp->line_no);
+    invalidParameters(exptype, boolean_obj, node->data.strval, exp->line_no);
     return false;
   }
 
@@ -393,7 +393,7 @@ obj_t checkExp(Node * exp, SymbolTable * currscope)
         mismatched_type(lhst, rhst, lhs->line_no, key);
         return invalid;
       }
-      ret = boolean;
+      ret = boolean_obj;
     }
     else if (key == "+")
     {

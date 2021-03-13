@@ -44,7 +44,7 @@ std::string objTypeToString(obj_t t)
       return "Integer";
     case(can_msg_obj):
       return "CAN Message";
-    case(boolean):
+    case(boolean_obj):
       return "boolean";
     default:
       return "Invalid";

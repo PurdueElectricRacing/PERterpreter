@@ -92,8 +92,8 @@ public:
   std::string getReason() { return reason; };
   
 private:
-  bool passed = false;
-  std::string reason;
+  bool passed = true;
+  std::string reason = "";
 
 };
 

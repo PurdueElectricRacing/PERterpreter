@@ -8,6 +8,7 @@
 #include "object-factory.h"
 #include "serial-device.h"
 #include "perterpreter_exceptions.h"
+#include "colors.h"
 
 #include "can_api.h"
 #include "ghc/filesystem.hpp"
@@ -27,6 +28,7 @@ extern FILE *yyin;
 extern std::string infilename;
 extern Node * root;
 extern int errors;
+
 
 
 
@@ -607,6 +609,42 @@ void Perterpreter::perterpretNode(Node * node, SymbolTable * scope)
 }
 
 
+void Perterpreter::runTest(Test * test)
+{
+  std::string test_name = test->getName();
+  std::string output;
+  std::string result;
+  output += "======================================\n"
+            WHITE_TEXT "Running test " CYAN_TEXT "'" + test_name
+            + "'" RESET_TEXT "\n======================================\n";
+  
+  std::cout << output;
+  perterpretNode(test->root, test);
+  
+  result = "======================================\n"
+           WHITE_TEXT "Test " CYAN_TEXT "'" + test_name + "'" RESET_TEXT " [ ";
+
+  if (test->testPassed())
+  {
+    result += GREEN_TEXT "PASSED" RESET_TEXT " ]\n";
+
+  }
+  else 
+  {
+    result += RED_TEXT "FAILED" RESET_TEXT " ]\n"
+              "    Reason: " + test->getReason();
+  }
+  result += "======================================\n";
+  std::cout << result;
+  output += result;
+  
+  // make sure the output file is actually open
+  if (test_output.is_open())
+  {
+    test_output << output;
+  }
+}
+
 
 /// @brief: This is what it's all been for. PER has it's own language now
 void Perterpreter::perterpret(std::string func)
@@ -621,30 +659,7 @@ void Perterpreter::perterpret(std::string func)
     for (auto t = tests->tests.begin(); t != tests->tests.end(); t++)
     {
       Test * test = t->second; 
-      std::string test_name = test->getName();
-      std::cout << "Running test '" << test_name << "'\n";
-      perterpretNode(test->root, test);
-      halt_execution = false;
-      output = "Test '" + test_name + "' [";
-
-      if (test->testPassed())
-      {
-        output += "PASSED ]\n";
-
-      }
-      else 
-      {
-        output += "FAILED ]\n" + std::string("    Reason: " + test->getReason());
-      }
-      std::cout << output;
-      
-      // make sure the output file is actually open
-      if (test_output.is_open())
-      {
-        test_output << output;
-      }
-      
-
+      runTest(test);
       // TODO timer to periodically garbage collect
       // TODO color output conditionally 
     }
@@ -652,26 +667,7 @@ void Perterpreter::perterpret(std::string func)
   else if (tests->hasTest(func))
   {
     Test * test = tests->getTest(func);
-    std::string test_name = test->getName();
-    perterpretNode(test->root, test);
-    output = "Test '" + test_name + "' [";
-
-    if (test->testPassed())
-    {
-      output += "PASSED ]\n";
-
-    }
-    else 
-    {
-      output += "FAILED ]\n" + std::string("    Reason: " + test->getReason());
-    }
-    std::cout << output;
-    
-    // make sure the output file is actually open
-    if (test_output.is_open())
-    {
-      test_output << output;
-    }
+    runTest(test);
   }
   else if (routines->hasRoutine(func))
   {

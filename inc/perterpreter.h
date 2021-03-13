@@ -121,6 +121,8 @@ private:
   void perterpretReadMsg(Node * node, SymbolTable * scope);
   void perterpretNode(Node * node, SymbolTable * scope);
   void perterpretIf(Node * node, SymbolTable * scope);
+  void runTest(Test * test);
+
   
   Object * perterpretExp(Node * node, SymbolTable * scope);
   Object * perterpretBinaryOp(Node * node, SymbolTable * scope);

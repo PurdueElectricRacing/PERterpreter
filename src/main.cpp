@@ -106,6 +106,12 @@ try
   options.parse_positional({"infile"});
   auto cmdline = options.parse(argc, argv);
 
+  if (cmdline.arguments().size() == 0)
+  {
+    printf("No arguments passed.\n");
+    exit(-1);
+  }
+
   if (cmdline.count("help"))
   {
     std::cout << options.help({"", "Options"}) << "\n";

@@ -88,7 +88,7 @@ void Perterpreter::createTemplateScript(std::string spath)
     p += ".pers";
   }
 
-  std::ofstream tgt(p.c_str(), std::ofstream::out);
+  std::ofstream tgt(p.generic_string().c_str(), std::ofstream::out);
 
   tgt << "// BEGIN GLOBAL VARIABLE INITIALIZATIONS\n"
          "// ========================================\n"
@@ -117,8 +117,8 @@ void Perterpreter::createTemplateScript(std::string spath)
 /// @return: true on valid syntax, false on error
 bool Perterpreter::performSyntaxAnalysis(ghc::filesystem::path filepath)
 {
-  infilename = filepath.c_str();
-  yyin = fopen(filepath.c_str(), "r");
+  infilename = filepath.generic_string().c_str();
+  yyin = fopen(filepath.generic_string().c_str(), "r");
   extern int yydebug;
 
 #ifdef DEBUG

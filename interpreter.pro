@@ -7,9 +7,9 @@ QT = core widgets serialport
 
 CONFIG += c++17 warn_on debug
 
-INCLUDEPATH += inc
+INCLUDEPATH += ./inc
 DESTDIR = build/
-SRCDIR = src
+SRCDIR = ./src
 OBJECTS_DIR = obj/
 
 
@@ -40,49 +40,49 @@ win32 {
 
 
 
-MOC_DIR = moc
+MOC_DIR = ./moc
 TARGET = /perterpreter
 
 DEFINES += STANDALONE GREAT=1 PER=GREAT DEBUG
 
 
 HEADERS = \
-   inc/ast.h \
-   inc/canmsg.h \
-   inc/cxxopts.hpp \
-   inc/integer.h \
-   inc/object-factory.h \
-   inc/object.h \
-   inc/operators.h \
-   inc/parser.h \
-   inc/perterpreter.h \
-   inc/strobj.h \
-   inc/symbol-table.h \
-   inc/synterr.h \
-   inc/type-checker.h \
-   inc/typedefs.h \
-   src/lexer.l \
-   src/parser.y \
-   inc/serial-device.h \
-   inc/perterpreter_exceptions.h \
+   ./inc/ast.h \
+   ./inc/canmsg.h \
+   ./inc/cxxopts.hpp \
+   ./inc/integer.h \
+   ./inc/object-factory.h \
+   ./inc/object.h \
+   ./inc/operators.h \
+   ./inc/parser.h \
+   ./inc/perterpreter.h \
+   ./inc/strobj.h \
+   ./inc/symbol-table.h \
+   ./inc/synterr.h \
+   ./inc/type-checker.h \
+   ./inc/typedefs.h \
+   ./src/lexer.l \
+   ./src/parser.y \
+   ./inc/serial-device.h \
+   ./inc/perterpreter_exceptions.h \
 
 
 SOURCES = \
-   src/ast.cpp \
-   src/lexer.cpp \
-   src/operators.cpp \
-   src/parser.cpp \
-   src/perterpreter.cpp \
-   src/stringify.cpp \
-   src/symbol-table.cpp \
-   src/synterr.cpp \
-   src/type-checker.cpp \
-   src/main.cpp \
+   ./src/ast.cpp \
+   ./src/lexer.cpp \
+   ./src/operators.cpp \
+   ./src/parser.cpp \
+   ./src/perterpreter.cpp \
+   ./src/stringify.cpp \
+   ./src/symbol-table.cpp \
+   ./src/synterr.cpp \
+   ./src/type-checker.cpp \
+   ./src/main.cpp \
 
 INCLUDEPATH = \
-    inc
+    ./inc
 
-include(DesktopCAN_API/canapi.pri)
+include(./DesktopCAN_API/canapi.pri)
 
 #DEFINES = 
 

@@ -8,7 +8,7 @@ QT = core widgets serialport
 CONFIG += c++17 warn_on debug
 
 INCLUDEPATH += ./inc
-DESTDIR = build/
+DESTDIR = ./build/
 SRCDIR = ./src
 OBJECTS_DIR = obj/
 
@@ -31,6 +31,7 @@ unix:!macx {
    flex.commands = flex -o src/lexer.cpp src/lexer.l
    bison.commands = bison -v -g -d --color -o src/parser.cpp --defines=inc/parser.h src/parser.y
    QMAKE_EXTRA_COMPILERS += bison flex
+   TARGET = /perterpreter
 }
 win32 {
    # windows compiler flags
@@ -38,10 +39,7 @@ win32 {
 }
 
 
-
-
 MOC_DIR = ./moc
-TARGET = /perterpreter
 
 DEFINES += STANDALONE GREAT=1 PER=GREAT DEBUG
 

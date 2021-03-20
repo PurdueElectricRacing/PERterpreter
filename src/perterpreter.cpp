@@ -21,8 +21,8 @@
 #include <thread>
 #include <memory>
 #include <QIODevice>
-#include <QTimer>
 #include <QDebug>
+#include <ctime>
 
 extern FILE *yyin;
 extern std::string infilename;
@@ -36,6 +36,8 @@ extern int errors;
 // during evaluations
 std::set<Object *> intermediate_operands;
 bool halt_execution = false;
+
+#define ELAPSED_MS(start) (((std::clock() - start) * 1000) / (CLOCKS_PER_SEC))
 
 
 /// @brief: private helper function for clearing any intermediate operands 
@@ -336,6 +338,7 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
 {
   Node * delay = node->children[0];
   size_t delayval = 0;
+  std::clock_t start_time = std::clock();
 
   if (delay->isLiteral())
   {
@@ -352,7 +355,12 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
     qDebug() << "\nDelaying execution for" << delayval << "ms";
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(delayval));
+  // start a timer for reading the message
+  int t = ELAPSED_MS(start_time);
+  while ((t = ELAPSED_MS(start_time)) < delayval)
+  {
+  }
+
 }
 
 
@@ -819,7 +827,7 @@ void Perterpreter::perterpretReadMsg(Node * node, SymbolTable * scope)
   Node * addrnode = node->children[0];
   Integer * address = static_cast<Integer *>(getObject(addrnode, scope));
   CAN_Msg * msg = 0;
-  QTimer read_timer;
+  std::clock_t start_time = std::clock();
   std::stringstream ss;
 
   if (verbose)
@@ -838,14 +846,12 @@ void Perterpreter::perterpretReadMsg(Node * node, SymbolTable * scope)
   CanFrame frame = can_if->readCanData();
 
   // start a timer for reading the message
-  read_timer.start(CAN_READ_TIMER_TIMEOUT);
-
-  while (frame.can_id != address->value && read_timer.remainingTime() > 0)
+  while (frame.can_id != address->value 
+         && ELAPSED_MS(start_time) < CAN_READ_TIMER_TIMEOUT)
   {
     frame = can_if->readCanData();
   }
 
-  read_timer.stop();
   msg = new CAN_Msg(frame);
 
   scope->setObject("RETVAL", msg);

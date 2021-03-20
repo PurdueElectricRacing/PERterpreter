@@ -8,3 +8,5 @@ obj
 *.dot
 *.output
 buildperterpreter
+*.Release
+*.Debug

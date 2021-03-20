@@ -236,7 +236,7 @@ try
 }
 catch (std::exception& e)
 {
-  std::cerr << "Exception raised: " << e.what() << "\n";
+  std::cerr << "\nException raised: " << e.what() << "\n";
 }
   
 }

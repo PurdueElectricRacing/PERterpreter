@@ -336,7 +336,6 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
 {
   Node * delay = node->children[0];
   size_t delayval = 0;
-  QTimer timer;
 
   if (delay->isLiteral())
   {
@@ -353,15 +352,7 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
     qDebug() << "\nDelaying execution for" << delayval << "ms";
   }
 
-  timer.start(delayval);
-
-  while (timer.remainingTime() > 0)
-  {
-
-  }
-
-  timer.stop();
-  // std::this_thread::sleep_for(std::chrono::milliseconds(delayval));
+  std::this_thread::sleep_for(std::chrono::milliseconds(delayval));
 }
 
 

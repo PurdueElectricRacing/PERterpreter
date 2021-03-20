@@ -211,6 +211,8 @@ https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwi7wem-
 
 There's a lot going on here. good luck.
 
+TODO 
+add windows compile steps
 
 
 Example Script
@@ -282,6 +284,8 @@ Compiling
 2. Add `C:\Qt\Tools\mingw810_64\bin` to your path
 3. Add `C:\Qt\5.15.2\mingw81_64\bin` to your path
 4. Open the project in QtCreator and click on the hammer button to build it.
+5. Once the project has been built, open a command prompt and cd into the `build` directory. 
+6. run `windeployqt .\perterpreter.exe` to copy the necessary .dlls into the build directory so that it can be run.
 
 
 Future developments

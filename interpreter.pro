@@ -35,6 +35,8 @@ unix:!macx {
 }
 win32 {
    # windows compiler flags
+   TARGET = perterpreter
+
    # TODO figure out how to build flex/bison files on winders
 }
 

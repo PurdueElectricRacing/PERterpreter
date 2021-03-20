@@ -5,7 +5,7 @@
 
 QT = core widgets serialport
 
-CONFIG += c++17 build_all console
+CONFIG += c++17 warn_on build_all console
 
 INCLUDEPATH += ./inc
 DESTDIR = ./build/

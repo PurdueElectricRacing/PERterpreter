@@ -182,7 +182,7 @@ else
  
 PERterpreter commands
 =====================
-  `perterpret <scriptname.pers> [(-V, --validate} | (-rt, --run-tests testlist) | (-rr, --run-routines routinelist)]| <-g dest> [-dev device] [-io device] [-v] [-l logfile]`
+  `perterpret <scriptname.pers> [(-V, --validate} | (-T, --run-tests testlist) | (-R, --run-routines routinelist)]| <-g dest> [-dev device] [-io device] [-v] [-l logfile]`
   - `-dev`: generic serial device which serial-rx and serial-tx will send / receive from
   - `-io`: the device to be used as the IO platform (e.g. COM3, /dev/tty4, etc)
   - `-v --verbose`: enables verbose printing. If enabled, all script commands

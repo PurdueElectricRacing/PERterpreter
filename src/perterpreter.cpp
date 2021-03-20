@@ -649,19 +649,20 @@ void Perterpreter::perterpret(std::string func)
     {
       Test * test = t->second; 
       runTest(test);
-      // TODO timer to periodically garbage collect
-      // TODO color output conditionally 
+      clearIntermediateOps(global_table);
     }
   }
   else if (tests->hasTest(func))
   {
     Test * test = tests->getTest(func);
     runTest(test);
+    clearIntermediateOps(global_table);
   }
   else if (routines->hasRoutine(func))
   {
     Routine * r = routines->getRoutine(func);
     perterpretNode(r->root, r);
+    clearIntermediateOps(global_table);
   }
   else
   {

@@ -232,7 +232,27 @@ try
     p.setTestOutputFile(toutfile);
   }
 
-  p.perterpret();
+  // only run the tests/routines specified in the commandline
+  if (!tests_to_run.empty())
+  {
+    for (auto test = tests_to_run.begin(); test != tests_to_run.end(); ++test)
+    {
+      p.perterpret(*test);
+    }
+  }
+  if (!routines_to_run.empty())
+  {
+    for (auto r = routines_to_run.begin(); 
+              r != routines_to_run.end(); ++r)
+    {
+      p.perterpret(*r);
+    }
+  }
+
+  if (routines_to_run.empty() && tests_to_run.empty())
+  {
+    p.perterpret();
+  }
 }
 catch (std::exception& e)
 {

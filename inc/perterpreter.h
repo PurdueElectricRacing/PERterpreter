@@ -99,9 +99,6 @@ public:
   void setCanDataMap(std::map<int, CanFrame> * datamap) { data_map = datamap; };
 
 
-  std::vector<std::string> listSerialDevices();
-
-  // TODO stream operator for writing to files and console without boost
 
 private:
   void perterpretVardecl(Node * node, SymbolTable * scope);

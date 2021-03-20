@@ -366,16 +366,6 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
 
 
 
-
-/// @brief: returns vector of serial devices currently accessible
-std::vector<std::string> Perterpreter::listSerialDevices()
-{
-
-}
-
-
-
-
 /// @brief: perform a variable assignment / reassignment
 void Perterpreter::perterpretVardecl(Node * node, SymbolTable * scope)
 {

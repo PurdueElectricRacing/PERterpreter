@@ -31,11 +31,14 @@ extern int errors;
 
 
 
+static bool test_executing = false;
+static uint64_t timeout = 0;
 
 // used for pseudo garbage collection of the intermediate Object * created
 // during evaluations
 std::set<Object *> intermediate_operands;
 bool halt_execution = false;
+
 
 #define ELAPSED_MS(start) (((std::clock() - start) * 1000) / (CLOCKS_PER_SEC))
 
@@ -165,28 +168,37 @@ Object * Perterpreter::getObject(Node * node, SymbolTable * scope)
 
   if (node->isIdentifier())
   {
-    ret = scope->getObject(node->data.strval);
-    // accessing a member of the object
-    if (node->children.size() > 0)
+    std::string key = node->data.strval;
+    if (key == "ELAPSED_MS")
     {
-      Node * exp = node->children[0];
-      CAN_Msg * msg = static_cast<CAN_Msg*>(ret);
-
-      if (exp->node_type == length_node)
+      ret = ObjectFactory::createLiteral(ELAPSED_MS(execution_time));
+      intermediate_operands.emplace(ret);
+    }
+    else
+    {
+      ret = scope->getObject(key);
+      // accessing a member of the object
+      if (node->children.size() > 0)
       {
-        ret = new Integer(msg->length());
-        intermediate_operands.emplace(ret);
-      }
-      else if (exp->node_type == index_node)
-      {
-        // return the index key
+        Node * exp = node->children[0];
+        CAN_Msg * msg = static_cast<CAN_Msg*>(ret);
 
-        Node * idx = exp->children[0];
-        Integer * val = static_cast<Integer *>(perterpretExp(idx, scope));
-        ret = new Integer(msg->get(val->value));
+        if (exp->node_type == length_node)
+        {
+          ret = new Integer(msg->length());
+          intermediate_operands.emplace(ret);
+        }
+        else if (exp->node_type == index_node)
+        {
+          // return the index key
 
-        intermediate_operands.emplace(ret);
-        intermediate_operands.emplace(val);
+          Node * idx = exp->children[0];
+          Integer * val = static_cast<Integer *>(perterpretExp(idx, scope));
+          ret = new Integer(msg->get(val->value));
+
+          intermediate_operands.emplace(ret);
+          intermediate_operands.emplace(val);
+        }
       }
     }
   }
@@ -513,6 +525,39 @@ void Perterpreter::perterpretLoop(Node * node, SymbolTable * scope)
 
 
 
+/// @brief: Thread that checks if a timeout has occurred.
+///
+/// @throw: TestTimeoutException if the timer exceeds the timeout specified.
+void timeoutChecker()
+{
+  clock_t start = std::clock();
+
+  while (ELAPSED_MS(start) > timeout && test_executing)
+  {
+    // do nothing
+  }
+  if (test_executing)
+  {
+    throw TestTimeout;
+  }
+
+}
+
+
+
+/// @brief: Creates a thread to raise an exception if a timeout occurs
+void Perterpreter::perterpretSetTimeout(Node * node, SymbolTable * scope)
+{
+  Integer * delay = static_cast<Integer *>(perterpretExp(node, scope));
+  timeout = delay->value;
+  // idk why but std::thread is mad that i'm passing arguments
+  timeout_thread = std::thread(timeoutChecker);
+  timeout_thread.detach();
+}
+
+
+
+
 /// @brief: Dispatcher for interpreting list nodes. Calling this with a 
 ///         non-list node will result in undefined behavior.
 void Perterpreter::perterpretNode(Node * node, SymbolTable * scope)
@@ -532,6 +577,9 @@ void Perterpreter::perterpretNode(Node * node, SymbolTable * scope)
         perterpretNode(child, scope);
         break;
       }
+      case (set_timeout):
+        perterpretSetTimeout(child, scope);
+        break;
       case (unary_math_node):
         perterpretExp(child, scope);
         break;
@@ -608,7 +656,25 @@ void Perterpreter::runTest(Test * test)
             + "'" RESET_TEXT "\n======================================\n";
   
   std::cout << output;
-  perterpretNode(test->root, test);
+  try 
+  {
+    test_executing = true;
+    execution_time = std::clock();
+    perterpretNode(test->root, test);
+    test_executing = false;
+
+    if (timeout_thread.joinable())
+    {
+      timeout_thread.join();
+    }
+  }
+  catch (TestTimeoutException &e)
+  {
+    test->failTest();
+    test->setFailReason("Test execution exceeded specified timeout.");
+  }
+
+  
   
   result = "======================================\n"
            WHITE_TEXT "Test " CYAN_TEXT "'" + test_name + "'" RESET_TEXT " [ ";
@@ -661,7 +727,23 @@ void Perterpreter::perterpret(std::string func)
   else if (routines->hasRoutine(func))
   {
     Routine * r = routines->getRoutine(func);
-    perterpretNode(r->root, r);
+    execution_time = std::clock();
+    try 
+    {
+      test_executing = true;
+      execution_time = std::clock();
+      perterpretNode(r->root, r);
+      test_executing = false;
+      
+      if (timeout_thread.joinable())
+      {
+        timeout_thread.join();
+      }
+    }
+    catch (TestTimeoutException &e)
+    {
+      std::cerr << "Routine execution terminated due to timeout.\n";
+    }
     clearIntermediateOps(global_table);
   }
   else

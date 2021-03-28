@@ -89,21 +89,22 @@ extern int yydebug;
     If = 280,                      /* If  */
     Else = 281,                    /* Else  */
     length = 282,                  /* length  */
-    stringLiteral = 283,           /* stringLiteral  */
-    identifier = 284,              /* identifier  */
-    can_msg = 285,                 /* can_msg  */
-    add = 286,                     /* add  */
-    mult = 287,                    /* mult  */
-    comparison = 288,              /* comparison  */
-    andToken = 289,                /* andToken  */
-    orToken = 290,                 /* orToken  */
-    NE = 291,                      /* NE  */
-    EQ = 292,                      /* EQ  */
-    integerLiteral = 293,          /* integerLiteral  */
-    hexLiteral = 294,              /* hexLiteral  */
-    dstate = 295,                  /* dstate  */
-    plusplus = 296,                /* plusplus  */
-    minusminus = 297               /* minusminus  */
+    setTimeout = 283,              /* setTimeout  */
+    stringLiteral = 284,           /* stringLiteral  */
+    identifier = 285,              /* identifier  */
+    can_msg = 286,                 /* can_msg  */
+    add = 287,                     /* add  */
+    mult = 288,                    /* mult  */
+    comparison = 289,              /* comparison  */
+    andToken = 290,                /* andToken  */
+    orToken = 291,                 /* orToken  */
+    NE = 292,                      /* NE  */
+    EQ = 293,                      /* EQ  */
+    integerLiteral = 294,          /* integerLiteral  */
+    hexLiteral = 295,              /* hexLiteral  */
+    dstate = 296,                  /* dstate  */
+    plusplus = 297,                /* plusplus  */
+    minusminus = 298               /* minusminus  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -118,7 +119,7 @@ union YYSTYPE
   int i;
   std::string * str;
 
-#line 122 "inc/parser.h"
+#line 123 "inc/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

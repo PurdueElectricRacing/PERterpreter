@@ -12,6 +12,16 @@ class SerialDeviceNotConnected : public std::exception
 } static SerialDeviceNotConnected;
 
 
+class TestTimeoutException : public std::exception
+{
+  virtual const char *what() const throw()
+  {
+    return "The current test exceeded the maximum execution duration.\n";
+  }
+} static TestTimeout;
+
+
+
 class NoGPIODevicesFound : public std::exception
 {
   virtual const char *what() const throw()

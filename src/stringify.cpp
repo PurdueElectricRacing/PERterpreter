@@ -77,6 +77,8 @@ std::string nodeTypeToString(node_type_t t)
       return "print";
     case (println):
       return "println";
+    case (set_timeout):
+      return "set-timeout";
     case (prompt_node):
       return "prompt";
     case (expect_node):

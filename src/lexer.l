@@ -110,6 +110,11 @@ serial\-rx {
   return serialRx;
 }
 
+set\-timeout {
+  return setTimeout;
+}
+
+
 and|"&&" {
   yylval.str = new std::string(yytext);
   return andToken;

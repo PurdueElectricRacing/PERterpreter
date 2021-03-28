@@ -71,7 +71,7 @@ bool checkTypes(Node * root, SymbolTable * currscope, Tests *tests, Routines *ro
     }
     // these commands take 1 integral argument 
     //(can be in the form of an expressions
-    else if (type == delay_node)
+    else if (type == delay_node || type == set_timeout)
     {
       checkIntegralArg(node, currscope);
     }

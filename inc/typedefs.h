@@ -31,6 +31,7 @@ enum node_type_t
   expect_node,
   assert_node,
   delay_node,
+  set_timeout,
   loop_node,
   generic,
   statement_list,

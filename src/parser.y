@@ -23,7 +23,8 @@
 
 %token <node> routine test loop delay read_pin set_pin perrint perrintln expect 
 %token <node> exit_tok prompt read_msg send_msg call forever dout din aout ain 
-%token <node> ';' '(' ')' '{' '}' '|' serialRx serialTx assert If Else length
+%token <node> ';' '(' ')' '{' '}' '|' serialRx serialTx assert If Else length 
+%token <node> setTimeout
 %token <str> stringLiteral identifier can_msg add mult  
 %token <str> comparison andToken orToken NE EQ
 %token <i> integerLiteral hexLiteral dstate
@@ -595,6 +596,10 @@ Statement: error ';' {
   }
   | PromptCall ';' {
       $$ = $1;
+  }
+  | setTimeout Exp ';' { 
+      $$ = new Node(set_timeout, @1.first_line);
+      $$->addChild($2);
   }
   | serialTx Exp ';' {
       $$ = new Node(serial_tx, @1.first_line);

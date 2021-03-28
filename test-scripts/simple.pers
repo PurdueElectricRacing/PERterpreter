@@ -17,6 +17,7 @@ routine "this is a routine test" {
 
 
 test "hello this is a test script" {
+  set-timeout 69;
   Var1 = "toast";
   GLOBAL = 42; 
   println GLOBAL;

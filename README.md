@@ -46,6 +46,7 @@ Statement:
   | exit string_literal ;
   | Exp ++ ;
   | Exp -- ;
+  | set-timeout Exp;
 ```
 
 ```
@@ -118,7 +119,7 @@ else
   - [] is used to access bytes at the specified index
   - .length is used to specify the DLC for a CAN frame
     - by default this will be assumed to be the number of bytes in the initial declaration
-
+- The keyword `ELAPSED_MS` can be accessed like a variable to get the current elapsed time (approx.) in milliseconds.
 
 ## Explanation of inbuilt functions
 
@@ -167,9 +168,10 @@ else
 
 `serial-rx`
   - reads from the global serial device and stores the response in the static
-    response variable. Additionally will log to stdout / file output if
-    global SERIAL_LOG_FILE is specified 
-
+    response variable. Additionally will log to stdout / file output
+  
+`set-timeout`
+  - specifies that the current execution should not run for more than the specified milliseconds. Will fail the test if the timeout is reached.
 
 
 - RETVAL will be a reserved keyword for the global static result variable

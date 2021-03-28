@@ -14,6 +14,7 @@
 #include <fstream>
 #include <QSerialPort>
 #include <map>
+#include <thread>
 
 #define CAN_READ_TIMER_TIMEOUT 1500 // msecs to wait for a specific message to arrive
 
@@ -119,7 +120,7 @@ private:
   void perterpretNode(Node * node, SymbolTable * scope);
   void perterpretIf(Node * node, SymbolTable * scope);
   void runTest(Test * test);
-
+  void perterpretSetTimeout(Node * node, SymbolTable * scope);
   
   Object * perterpretExp(Node * node, SymbolTable * scope);
   Object * perterpretBinaryOp(Node * node, SymbolTable * scope);
@@ -140,6 +141,8 @@ private:
   bool gpio_created = false;
   bool ser_created = false;
   bool can_created = false;
+  clock_t execution_time;
+  std::thread timeout_thread;
 
   std::ofstream test_output;
 

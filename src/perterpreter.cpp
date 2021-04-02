@@ -70,6 +70,24 @@ void clearIntermediateOps(SymbolTable * scope)
   }
 }
 
+/// @brief: Thread that checks if a timeout has occurred.
+///
+/// @throw: TestTimeoutException if the timer exceeds the timeout specified.
+void timeoutChecker()
+{
+  clock_t start = std::clock();
+  uint64_t ms = 0;
+  while ((ms = ELAPSED_MS(start)) < timeout && test_executing)
+  {
+    // do nothing
+  }
+  if (test_executing)
+  {
+    throw TestTimeout;
+  }
+
+}
+
 
 
 /// @brief: Function that gets called when the user specifies the -g, 
@@ -103,13 +121,14 @@ void Perterpreter::createTemplateScript(std::string spath)
 
          "\n// BEGIN ROUTINE DECLARATIONS\n"
          "// ========================================\n"
-         "routine \"routine name\" {\n  perrintln \"Howdy friends.\";\n}\n\n"
+         "routine \"routine name\" {\n  set-timeout 69;\n  perrintln "
+         "\"Howdy friends.\";\n}\n\n"
          "// ========================================\n"
          "// END ROUTINE DECLARATIONS\n"
 
          "\n// BEGIN TEST DECLARATIONS\n"
          "// ========================================\n"
-         "test \"test name\" {\n  assert EQ 1;\n}\n\n"
+         "test \"test name\" {\n  assert RETVAL EQ 1;\n}\n\n"
          "// ========================================\n"
          "// END TEST DECLARATIONS\n"
          ;
@@ -124,9 +143,9 @@ bool Perterpreter::performSyntaxAnalysis(ghc::filesystem::path filepath)
 {
   infilename = filepath.generic_string().c_str();
   yyin = fopen(filepath.generic_string().c_str(), "r");
-  extern int yydebug;
 
 #ifdef DEBUG
+  // extern int yydebug;
   // yydebug = 1;
 #endif
   if (yyparse() != 0 || errors > 0)
@@ -236,14 +255,12 @@ void Perterpreter::perterpretExpectAssert(Node * node, SymbolTable * scope)
       Test * t = static_cast<Test *>(scope);
       t->failTest();
       t->setFailReason(failure_string);
+      // kill the current execution
+      if (node->node_type == assert_node)
+      {
+        halt_execution = true;
+      }
     }
-  }
-
-  // kill the current execution
-  if (node->node_type == assert_node)
-  {
-    // TODO assertion nodes
-    halt_execution = true;
   }
 }
 
@@ -368,7 +385,7 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
   }
 
   // start a timer for reading the message
-  int t = ELAPSED_MS(start_time);
+  size_t t = ELAPSED_MS(start_time);
   while ((t = ELAPSED_MS(start_time)) < delayval)
   {
   }
@@ -484,13 +501,12 @@ void Perterpreter::perterpretIf(Node * node, SymbolTable * scope)
 
 
 
-void Perterpreter::perterpretCall(Node * node, SymbolTable * scope)
+void Perterpreter::perterpretCall(Node * node)
 {
   // the routine name has to be the next argument and it has to be a literal
   std::string routine_name = node->data.strval;
   Routine * r = routines->getRoutine(routine_name, node->line_no);
   perterpretNode(r->getRoot(), r);
-
 }
 
 
@@ -525,30 +541,14 @@ void Perterpreter::perterpretLoop(Node * node, SymbolTable * scope)
 
 
 
-/// @brief: Thread that checks if a timeout has occurred.
-///
-/// @throw: TestTimeoutException if the timer exceeds the timeout specified.
-void timeoutChecker()
-{
-  clock_t start = std::clock();
-
-  while (ELAPSED_MS(start) > timeout && test_executing)
-  {
-    // do nothing
-  }
-  if (test_executing)
-  {
-    throw TestTimeout;
-  }
-
-}
 
 
 
 /// @brief: Creates a thread to raise an exception if a timeout occurs
 void Perterpreter::perterpretSetTimeout(Node * node, SymbolTable * scope)
 {
-  Integer * delay = static_cast<Integer *>(perterpretExp(node, scope));
+  Node * exp = node->children[0];
+  Integer * delay = static_cast<Integer *>(perterpretExp(exp, scope));
   timeout = delay->value;
   // idk why but std::thread is mad that i'm passing arguments
   timeout_thread = std::thread(timeoutChecker);
@@ -587,7 +587,7 @@ void Perterpreter::perterpretNode(Node * node, SymbolTable * scope)
         perterpretVardecl(child, scope);
         break;
       case (call_node):
-        perterpretCall(child, scope);
+        perterpretCall(child);
         break;
       case (delay_node):
         perterpretDelay(child, scope);
@@ -604,7 +604,6 @@ void Perterpreter::perterpretNode(Node * node, SymbolTable * scope)
         perterpretPrint(child, scope);
         break;
       case (exit_node):
-        // TODO exit code
         std::cout << node->data.strval << "\n";
         exit(0);
         break;
@@ -612,7 +611,7 @@ void Perterpreter::perterpretNode(Node * node, SymbolTable * scope)
         perterpretSerialTx(child, scope);
         break;
       case (serial_rx):
-        perterpretSerialRx(child, scope);
+        perterpretSerialRx(scope);
         break;
       case (prompt_node):
         perterpretPrompt(child, scope);
@@ -668,10 +667,10 @@ void Perterpreter::runTest(Test * test)
       timeout_thread.join();
     }
   }
-  catch (TestTimeoutException &e)
+  catch (std::exception &e)
   {
     test->failTest();
-    test->setFailReason("Test execution exceeded specified timeout.");
+    test->setFailReason(std::string("Exception raised: ") + e.what());
   }
 
   
@@ -776,7 +775,7 @@ void Perterpreter::perterpretSerialTx(Node * node, SymbolTable * scope)
 
 /// @brief: Read from a connected generic serial device. 
 /// @throws: SerialDeviceNotConnected if no device is connected
-void Perterpreter::perterpretSerialRx(Node * node, SymbolTable * scope)
+void Perterpreter::perterpretSerialRx(SymbolTable * scope)
 {
   if (serial_device->isOpen())
   {
@@ -955,11 +954,6 @@ void Perterpreter::perterpretReadMsg(Node * node, SymbolTable * scope)
     }
   }
 
-  // TODO figure out how to display the messages to the test bench here if its being used
-  if (data_map)
-  {
-    // data_map[frame.can_id] = frame;
-  }
 }
 
 

@@ -2,7 +2,7 @@
 #define __COLORS_H__
 
 
-// TODO might not be able to do this on winders
+// TODO figure out how to get pretty colorz on winD'OHs
 #ifndef WIN32
 #define GREEN_TEXT "\u001b[32m"
 #define RESET_TEXT "\u001b[0m"

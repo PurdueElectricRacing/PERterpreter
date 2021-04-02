@@ -17,7 +17,7 @@ routine "this is a routine test" {
 
 
 test "hello this is a test script" {
-  set-timeout 69;
+  set-timeout 10000;
   Var1 = "toast";
   GLOBAL = 42; 
   println GLOBAL;
@@ -72,10 +72,10 @@ test "hello this is a test script" {
     println "Boo";
   }
   delay(1000);
-  set-pin DOUT 13 HIGH;
+  // set-pin DOUT 13 HIGH;
   // exit;
   delay(1000);
-  read-pin DIN 13;
+  // read-pin DIN 13;
   println "Pin 13 = " + RETVAL;
   // set-pin DOUT 69 LOW;
   // set-pin DOUT 69 HIGH;
@@ -86,8 +86,9 @@ test "hello this is a test script" {
 
   // expect RETVAL GT 6; // 
   // prompt "Do some fancy stuff";
+  RETVAL = 4;
 
-  // assert RETVAL GT 6;
+  assert RETVAL == 4;
 
   // call "this is a routine test";
   

@@ -22,8 +22,7 @@ class Perterpreter
 {
 public:
   Node * _root = 0;
-  Perterpreter(GpioDevice * gpio = 0, SerialDevice * misc = 0, 
-               std::map<int, CanFrame> * datamap = 0) {
+  Perterpreter(GpioDevice * gpio = 0, SerialDevice * misc = 0) {
     routines = new Routines();
     tests = new Tests();
     global_table = new SymbolTable();
@@ -48,7 +47,6 @@ public:
     {
       serial_device = misc;
     }
-    data_map = datamap;
     can_if = 0;
   }
 
@@ -89,7 +87,6 @@ public:
   bool setGpioDev(std::string dev) { return gpio_device->setSerialDevice(dev);};
   bool setSerialDev(std::string dev) {return serial_device->setSerialDevice(dev);};
   void setCanInterface(CanInterface * itf) { can_if = itf; };
-  // TODO Create a pointer to a global buffer here for if interpreter is being used by test bench so it can still do live can logging
   void selectGpioDev();
   bool performSyntaxAnalysis(ghc::filesystem::path filepath);
 
@@ -97,19 +94,18 @@ public:
   void createTemplateScript(std::string spath);
 
   void perterpret(std::string func="");
-  void setCanDataMap(std::map<int, CanFrame> * datamap) { data_map = datamap; };
 
 
 
 private:
   void perterpretVardecl(Node * node, SymbolTable * scope);
-  void perterpretCall(Node * node, SymbolTable * scope);
+  void perterpretCall(Node * node);
   void perterpretDelay(Node * node, SymbolTable * scope);
   void perterpretLoop(Node * node, SymbolTable * scope);
   void perterpretExpectAssert(Node * node, SymbolTable * scope);
   void perterpretPrint(Node * node, SymbolTable * scope);
   void perterpretSerialTx(Node * node, SymbolTable * scope);
-  void perterpretSerialRx(Node * node, SymbolTable * scope);
+  void perterpretSerialRx(SymbolTable * scope);
   void perterpretPrompt(Node * node, SymbolTable * scope);
   void perterpretDRead(Node * node, SymbolTable * scope);
   void perterpretDWrite(Node * node, SymbolTable * scope);
@@ -131,7 +127,6 @@ private:
   Tests *tests = 0;
   SymbolTable * global_table = 0;
    
-  std::map<int, CanFrame> * data_map;
   std::string log_file;
   SerialDevice *serial_device;
   GpioDevice *gpio_device;

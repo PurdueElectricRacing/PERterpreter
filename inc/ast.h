@@ -49,7 +49,6 @@ public:
   };
 
   ~Node() {
-    // TODO destructor lol this will be tough
     for (auto i = children.begin(); i != children.end(); i++)
     {
       delete (*i);

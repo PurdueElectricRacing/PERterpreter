@@ -1,3 +1,12 @@
+# Purpose
+The purpose of this was initially to serve as a CLI extension for a graphical frontend which had additional functionality. The ultimate goal of the graphical front end was to serve as a way to perform various simulation modes for the car so we could perform manual testing as well as scripted testing. However, as this project developed it was decided that this system could serve most of the purposes of the GUI tool, and thus the gooey tool was phased out and never implemented. Additionally, it seems unlikely that accurate simulation models could be achieved given our limited (mine specifically) availability and time to fully understand all of the possible operation modes for the motor controller. A BMS simulator could be done, though it seems tedious, and like a project in and of itself. 
+
+Anyway, PERterpreter is now the official scripting language of PER, which should allow us to perform automated testing of simplistic functionality (GPIO, CAN messaging, and serial communication).
+
+It allows for creating of test scripts which output PASSED or FAILED, depending on the results of any `assert` functions in the code. 
+
+TODO explain this shizz better yo
+
 # Cloning this repo
 To clone this repository, run the following command as this project makes use of git submodules.
 

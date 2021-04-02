@@ -34,7 +34,7 @@ unix:!macx {
 }
 win32 {
    # windows compiler flags
-   # TODO figure out how to build flex/bison files on winders
+   # TODO figure out how to build flex/bison files on winders HA HAHAHAHAHAHa lol nope good luck yall just get a linux vm honestly its not hard to do that.
 }
 
 

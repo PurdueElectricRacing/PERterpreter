@@ -20,7 +20,9 @@
 
 
 
-
+// TODO rigor test the GPIO stuff
+// TODO rigor test the can stuff
+// TODO make sure generic serial stuff works (it should)
 
 /// @brief: gets the list of connected serial devices and returns a pretty 
 ///         string for printing to console

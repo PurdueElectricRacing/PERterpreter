@@ -5,8 +5,7 @@ Anyway, PERterpreter is now the official scripting language of PER, which should
 
 It allows for creating of test scripts which output PASSED or FAILED, depending on the results of any `assert` functions in the code. 
 
-TODO explain this shizz better yo
-
+TODO explain this shizz better yo. Basically what I mean by this is i need to break down the code location a lot better and document how stuff intermingles (because it's all spaghetti) also talk about the PERS highlighter
 # Cloning this repo
 To clone this repository, run the following command as this project makes use of git submodules.
 
@@ -121,7 +120,7 @@ else
 - tests are not callable from other tests / routines, but routines can be callable from other tests and routines
 - string literals can be either "" or ''
 - values which come in the form of a buffer (aka an array) will be converted to strings to be stored in the global response object
-- overloading any globally defined variables is not allowed. All variable names must be unique
+  - this is for ease of comparisons
 - global variables must be declared at the top of the file
 - routines must be declared after global var decls, and before test decls
 - CAN message objects have [] and .length operators
@@ -129,6 +128,8 @@ else
   - .length is used to specify the DLC for a CAN frame
     - by default this will be assumed to be the number of bytes in the initial declaration
 - The keyword `ELAPSED_MS` can be accessed like a variable to get the current elapsed time (approx.) in milliseconds.
+  - This is not a variable, and is not writable. If you try to write to it, nothing will happen. 
+- a maximum execution time for a test / routine can be specified using the `set-timeout` function.
 
 ## Explanation of inbuilt functions
 

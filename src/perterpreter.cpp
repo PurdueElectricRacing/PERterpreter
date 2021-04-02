@@ -650,9 +650,10 @@ void Perterpreter::runTest(Test * test)
   std::string test_name = test->getName();
   std::string output;
   std::string result;
-  output += "======================================\n"
-            WHITE_TEXT "Running test " CYAN_TEXT "'" + test_name
-            + "'" RESET_TEXT "\n======================================\n";
+  output += "======================================\n" +
+            setTextColor(WHITE) +  "Running test " + setTextColor(CYAN) + "'" 
+            + test_name + "'" + setTextColor(RESET) 
+            + "\n======================================\n";
   
   std::cout << output;
   try 
@@ -675,17 +676,18 @@ void Perterpreter::runTest(Test * test)
 
   
   
-  result = "======================================\n"
-           WHITE_TEXT "Test " CYAN_TEXT "'" + test_name + "'" RESET_TEXT " [ ";
+  result = "======================================\n" +
+           setTextColor(WHITE) +  "Test " + setTextColor(CYAN) + "'" 
+           + test_name + "'" + setTextColor(RESET) + " [ ";
 
   if (test->testPassed())
   {
-    result += GREEN_TEXT "PASSED" RESET_TEXT " ]\n";
+    result += setTextColor(GREEN) + "PASSED" + setTextColor(RESET) + " ]\n";
 
   }
   else 
   {
-    result += RED_TEXT "FAILED" RESET_TEXT " ]\n"
+    result += setTextColor(RED) +  "FAILED" + setTextColor(RESET) + " ]\n"
               "    Reason: " + test->getReason();
   }
   result += "======================================\n";

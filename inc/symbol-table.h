@@ -63,7 +63,6 @@ private:
   void initGlobals() 
   {  
     symbols.emplace("RETVAL", new Object());
-    symbols.emplace("ELAPSED_MS", new Integer());
   }
   void setReadOnlyVar(std::string key, Object * o);
 };

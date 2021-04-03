@@ -47,6 +47,7 @@ DEFINES += STANDALONE GREAT=1 PER=GREAT DEBUG
 
 
 HEADERS = \
+   ./inc/timer.h \
    ./inc/ast.h \
    ./inc/canmsg.h \
    ./inc/cxxopts.hpp \

@@ -49,19 +49,23 @@ static std::string setTextColor(colors_t color)
     h_console = GetStdHandle(STD_OUTPUT_HANDLE);
     init = true;
   }
-  int color = 15;
+  int color = 7;
   switch (color)
     {
       case(GREEN):
-        color = 2;
+        color = 10;
+        break;
       case(RED):
-        color = 4;
-      case(RESET):
-
+        color = 12;
+        break;
       case(WHITE):
-      case(CYAN):
-      default:
         color = 15;
+        break;
+      case(CYAN):
+        color = 11;
+        break;
+      default:
+        color = 7;
   }
   SetConsoleTextAttribute(hConsole, color);
   return "";

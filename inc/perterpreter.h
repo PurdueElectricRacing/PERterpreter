@@ -9,6 +9,7 @@
 #include "gpio-interface.h"
 #include "can_api.h"
 #include "ghc/filesystem.hpp"
+#include "timer.h"
 
 #include <iostream>
 #include <fstream>
@@ -77,7 +78,6 @@ public:
     }
   }
 
-  void setLogFile(std::string path) {log_file = path;};
 
   /// open a file for logging test output to
   void setTestOutputFile(std::string path) {
@@ -127,7 +127,6 @@ private:
   Tests *tests = 0;
   SymbolTable * global_table = 0;
    
-  std::string log_file;
   SerialDevice *serial_device;
   GpioDevice *gpio_device;
   CanInterface *can_if;
@@ -136,8 +135,8 @@ private:
   bool gpio_created = false;
   bool ser_created = false;
   bool can_created = false;
-  clock_t execution_time;
   std::thread timeout_thread;
+  Timer execution_begin;
 
   std::ofstream test_output;
 

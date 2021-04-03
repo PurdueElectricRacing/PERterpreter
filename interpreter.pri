@@ -47,6 +47,7 @@ DEFINES += GREAT=1 PER=GREAT
 
 
 HEADERS = \
+   ./inc/timer.h \
    $$PWD/inc/ast.h \
    $$PWD/inc/canmsg.h \
    $$PWD/inc/cxxopts.hpp \

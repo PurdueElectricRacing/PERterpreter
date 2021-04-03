@@ -199,7 +199,6 @@ PERterpreter commands
   - `-io`: the device to be used as the IO platform (e.g. COM3, /dev/tty4, etc)
   - `-v --verbose`: enables verbose printing. If enabled, all script commands
                 supporting verbose printing will print to stdout
-  - `-l --log filename`: specifies the file to log to. defaults to stdout
   - `-t, --test-output filename`: filename of where to put the test output
   - `-g, --generate-sample dest`: generate a sample script and put in in the supplied path. Users can specify the file name by specifying a whole (existing) path and appending the file's name to the path
   - `-V, --validate`: if this switch is passed, the interpreter will not execute. It will instead only perform syntax parsing and type checking. This is useful for checking scripts before actually running them if you don't want to run them.

@@ -2,6 +2,7 @@
 #define __SERIAL_STUFF_H__
 
 
+#include "timer.h"
 
 #include <string>
 #include <QSerialPort>
@@ -129,8 +130,13 @@ public:
     if (default_open)
     {
       open();
-      qDebug() << "Delaying for 500ms because the Arduino is a butthole";
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      qDebug() << "Delaying for 1000ms because the Arduino is a butthole";
+      Timer t(1000);
+      t.start();
+      while(!t.expired())
+      {
+
+      }
     }
 
       

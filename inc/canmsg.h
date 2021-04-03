@@ -77,14 +77,14 @@ public:
   virtual std::string stringify() { 
     std::string ret;
 
-    for (size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < len; i++)
     {
       // do not move this variable out of the loop
       // it needs re-init every iteration
       std::stringstream ss;
       ss << std::hex << (size_t) data[i];
       ret += ss.str();
-      if (i < 7)
+      if (i < len - 1)
         ret += "|";
     }
     return ret;
@@ -94,7 +94,7 @@ public:
 
   uint8_t get(int idx)
   {
-    if (idx >= len)
+    if (idx > 7)
     {
       return data[len - 1];
     }

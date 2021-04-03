@@ -12,7 +12,7 @@ int main (int argc, char ** argv)
   CanInterface * candev = 0;
   Perterpreter p;
   
-  std::string infile, device, io, logfile, toutfile, sdest;
+  std::string infile, device, io, toutfile, sdest;
   std::vector<std::string> routines_to_run, tests_to_run;
   std::set<int> baud_rates = {
     125000,
@@ -47,11 +47,6 @@ try
      value<bool>(verb))
     
     ("h,help", "Print help message")
-    
-    ("l,log", 
-     "Filepath to use as the log file. I don't think this is necessary and "
-     "honestly I'm not going to implement it until someone says they want it", 
-     value<std::string>(logfile))
 
     ("t,test-output", 
      "Filename where test output should be logged", 
@@ -137,7 +132,6 @@ try
     }
   }
 
-  // TODO routines to run and tests to run
   
   if (infile.empty())
   {
@@ -222,10 +216,6 @@ try
                  " send-msg will raise an exception.\n";
   }
 
-  if (!logfile.empty())
-  {
-    p.setLogFile(logfile);
-  }
 
   if (!toutfile.empty())
   {
@@ -258,5 +248,4 @@ catch (std::exception& e)
 {
   std::cerr << "\nException raised: " << e.what() << "\n";
 }
-  
 }

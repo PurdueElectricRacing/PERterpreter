@@ -9,7 +9,7 @@
 #include "serial-device.h"
 #include "perterpreter_exceptions.h"
 #include "colors.h"
-
+#include "timer.h"
 #include "can_api.h"
 #include "ghc/filesystem.hpp"
 
@@ -22,7 +22,7 @@
 #include <memory>
 #include <QIODevice>
 #include <QDebug>
-#include <ctime>
+#include <stdexcept>
 
 extern FILE *yyin;
 extern std::string infilename;
@@ -30,9 +30,10 @@ extern Node * root;
 extern int errors;
 
 
-
+// TODO test serial
 static bool test_executing = false;
 static uint64_t timeout = 0;
+static std::exception_ptr exception;
 
 // used for pseudo garbage collection of the intermediate Object * created
 // during evaluations
@@ -40,7 +41,6 @@ std::set<Object *> intermediate_operands;
 bool halt_execution = false;
 
 
-#define ELAPSED_MS(start) (((std::clock() - start) * 1000) / (CLOCKS_PER_SEC))
 
 
 /// @brief: private helper function for clearing any intermediate operands 
@@ -75,15 +75,15 @@ void clearIntermediateOps(SymbolTable * scope)
 /// @throw: TestTimeoutException if the timer exceeds the timeout specified.
 void timeoutChecker()
 {
-  clock_t start = std::clock();
-  uint64_t ms = 0;
-  while ((ms = ELAPSED_MS(start)) < timeout && test_executing)
+  Timer t(timeout);
+  t.start();
+  while (!t.expired() && test_executing)
   {
     // do nothing
   }
   if (test_executing)
   {
-    throw TestTimeout;
+    exception = std::make_exception_ptr(TestTimeout);
   }
 
 }
@@ -188,9 +188,9 @@ Object * Perterpreter::getObject(Node * node, SymbolTable * scope)
   if (node->isIdentifier())
   {
     std::string key = node->data.strval;
-    if (key == "ELAPSED_MS")
+    if (key == "elapsedMs")
     {
-      ret = ObjectFactory::createLiteral(ELAPSED_MS(execution_time));
+      ret = ObjectFactory::createLiteral(execution_begin.elapsedMs());
       intermediate_operands.emplace(ret);
     }
     else
@@ -210,7 +210,6 @@ Object * Perterpreter::getObject(Node * node, SymbolTable * scope)
         else if (exp->node_type == index_node)
         {
           // return the index key
-
           Node * idx = exp->children[0];
           Integer * val = static_cast<Integer *>(perterpretExp(idx, scope));
           ret = new Integer(msg->get(val->value));
@@ -333,17 +332,24 @@ Object * Perterpreter::perterpretExp(Node * node, SymbolTable * scope)
     if (object->children.size() > 0)
     {
       Node * child_2 = object->getChild(index_node);
+        // get the can-message variable 
+      CAN_Msg * msg = static_cast<CAN_Msg *>(
+                scope->getObject(object->data.strval)
+      );
 
       if (child_2)
       {
         Node * idx_node = child_2->children[0];
-        // get the can-message variable 
-        CAN_Msg * msg = static_cast<CAN_Msg *>(scope->getObject(object->data.strval));
         // get the index value
         i = static_cast<Integer *>(getObject(idx_node, scope));
         int val = msg->get(i->value);
         msg->setData(i->value, unaryMath(val, node->data.strval));    
         i = new Integer(msg->get(i->value));    
+      }
+      else if (child_2 = object->getChild(length_node))
+      {
+        msg->setLeng(unaryMath(msg->length(), node->data.strval));
+        i = new Integer(msg->length());
       }
     }
     // if it's not a special can-message access then just do normal object creation and stuff
@@ -367,7 +373,7 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
 {
   Node * delay = node->children[0];
   size_t delayval = 0;
-  std::clock_t start_time = std::clock();
+  Timer t;
 
   if (delay->isLiteral())
   {
@@ -383,10 +389,11 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
   {
     qDebug() << "\nDelaying execution for" << delayval << "ms";
   }
+  t.duration = delayval;
+  t.start();
 
   // start a timer for reading the message
-  size_t t = ELAPSED_MS(start_time);
-  while ((t = ELAPSED_MS(start_time)) < delayval)
+  while (!t.expired())
   {
   }
 
@@ -550,6 +557,10 @@ void Perterpreter::perterpretSetTimeout(Node * node, SymbolTable * scope)
   Node * exp = node->children[0];
   Integer * delay = static_cast<Integer *>(perterpretExp(exp, scope));
   timeout = delay->value;
+  if (verbose)
+  {
+    printf("Creating timer for %ld ms.\n", timeout);
+  }
   // idk why but std::thread is mad that i'm passing arguments
   timeout_thread = std::thread(timeoutChecker);
   timeout_thread.detach();
@@ -562,6 +573,11 @@ void Perterpreter::perterpretSetTimeout(Node * node, SymbolTable * scope)
 ///         non-list node will result in undefined behavior.
 void Perterpreter::perterpretNode(Node * node, SymbolTable * scope)
 {
+  if (exception)
+  {
+    std::rethrow_exception(exception);
+  }
+  
   for (auto n = node->children.begin(); n != node->children.end() 
       && !halt_execution; ++n)
   {
@@ -659,7 +675,7 @@ void Perterpreter::runTest(Test * test)
   try 
   {
     test_executing = true;
-    execution_time = std::clock();
+    execution_begin.start();
     perterpretNode(test->root, test);
     test_executing = false;
 
@@ -697,7 +713,15 @@ void Perterpreter::runTest(Test * test)
   // make sure the output file is actually open
   if (test_output.is_open())
   {
-    test_output << output;
+    test_output << "Test '" << test->name << "' [ ";
+    if (test->testPassed())
+    {
+      test_output << "PASSED ]";
+    }
+    else
+    {
+      test_output << "FAILED ]\n    Reason: " << test->getReason() << "\n";
+    }
   }
 }
 
@@ -728,11 +752,10 @@ void Perterpreter::perterpret(std::string func)
   else if (routines->hasRoutine(func))
   {
     Routine * r = routines->getRoutine(func);
-    execution_time = std::clock();
     try 
     {
       test_executing = true;
-      execution_time = std::clock();
+      execution_begin.start();
       perterpretNode(r->root, r);
       test_executing = false;
       
@@ -911,8 +934,13 @@ void Perterpreter::perterpretReadMsg(Node * node, SymbolTable * scope)
   Node * addrnode = node->children[0];
   Integer * address = static_cast<Integer *>(getObject(addrnode, scope));
   CAN_Msg * msg = 0;
-  std::clock_t start_time = std::clock();
   std::stringstream ss;
+  Timer timer(CAN_READ_TIMER_TIMEOUT);
+
+  if (!can_if)
+  {
+    throw CANDeviceNotConnected;
+  }
 
   if (verbose)
   {
@@ -922,16 +950,12 @@ void Perterpreter::perterpretReadMsg(Node * node, SymbolTable * scope)
              << QString(("0x" + ss.str()).c_str());  // this is whack yo
   }
 
-  if (!can_if)
-  {
-    throw CANDeviceNotConnected;
-  }
 
   CanFrame frame = can_if->readCanData();
 
   // start a timer for reading the message
-  while (frame.can_id != address->value 
-         && ELAPSED_MS(start_time) < CAN_READ_TIMER_TIMEOUT)
+  timer.start();
+  while (frame.can_id != address->value && !timer.expired())
   {
     frame = can_if->readCanData();
   }
@@ -940,20 +964,17 @@ void Perterpreter::perterpretReadMsg(Node * node, SymbolTable * scope)
 
   scope->setObject("RETVAL", msg);
 
-  if (frame.can_id != address->value)
+  if (frame.can_id != address->value || frame.validFrame())
   {
     std::cerr << "\nNo message received from " << std::hex << address->value << "\n";
   }
 
-  if (frame.can_dlc > 0 && frame.can_id != 0)
+  if (frame.can_dlc > 0 || verbose)
   {
-    if (verbose)
-    {
-      ss.str("");  
-      ss << std::hex << frame.can_id;
-      std::cout << "\nRead message " << frame << " from " 
-                << "0x" + ss.str() << "\n";
-    }
+    ss.str("");  
+    ss << std::hex << frame.can_id;
+    std::cout << "\nRead message " << frame << " from " 
+              << "0x" + ss.str() << "\n";
   }
 
 }

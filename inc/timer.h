@@ -13,6 +13,7 @@ class Timer
 public:
   Timer(uint64_t duration = 0) {
     this->duration = duration;
+    start_time = steady_clock::now();
   };
 
   void start() {

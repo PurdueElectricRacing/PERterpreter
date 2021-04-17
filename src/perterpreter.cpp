@@ -787,7 +787,7 @@ void Perterpreter::perterpretSerialTx(Node * node, SymbolTable * scope)
   {
     String * val = static_cast<String *>(getObject(node->children[0], scope));
     QString cmd = val->value.c_str();
-    serial_device->sendCommand(cmd);
+    serial_device->sendCommand(cmd.toUtf8());
   }
   else
   {

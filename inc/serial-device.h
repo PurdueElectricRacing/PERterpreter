@@ -21,9 +21,6 @@
 
 
 
-// TODO rigor test the GPIO stuff
-// TODO rigor test the can stuff
-// TODO make sure generic serial stuff works (it should)
 
 /// @brief: gets the list of connected serial devices and returns a pretty 
 ///         string for printing to console
@@ -79,6 +76,10 @@ public:
       std::cerr << "Error opening " << device.portName().toStdString() << ": " 
                 << "\n";
     }
+    // device.setParity(QSerialPort::NoParity);
+    // device.setStopBits(QSerialPort::OneStop);
+    // device.setFlowControl(QSerialPort::NoFlowControl);
+    // device.setDataBits(QSerialPort::Data8);
   };
 
   void close() { device.close(); };
@@ -131,7 +132,7 @@ public:
     {
       open();
       qDebug() << "Delaying for 1000ms because the Arduino is a butthole";
-      Timer t(1000);
+      Timer t(3000);
       t.start();
       while(!t.expired())
       {
@@ -201,14 +202,14 @@ public:
   /// @brief: Send an arbitrary command to an arbitrary serial device
   ///
   /// @return: true on success, false on error
-  bool sendCommand(QString cmd)
+  bool sendCommand(QByteArray cmd)
   {
     // make sure the device is open
     if (device.isOpen())
     {
-      qDebug() << "SerialDevice::sendCommand: Sending command" << cmd;
-      
-      if (device.write(cmd.toUtf8()) == -1)
+      // qDebug() << "SerialDevice::sendCommand: Sending command" << cmd;
+      int written = device.write(cmd);
+      if (written == -1)
       {
         std::cerr << "SerialDevice::sendCommand: error sending to device.\n";
       }
@@ -233,8 +234,8 @@ public:
       // there may or may not be data already in the buffer, so just read it 
       // all and delimit it based on \r\n
       QString data = device.readAll();
-      qDebug() << "SerialDevice::serialRead: Received" << data << "from" 
-               << device.portName();
+      // qDebug() << "SerialDevice::serialRead: Received" << data << "from" 
+              //  << device.portName();
       return data;
     }
     std::cerr << device.portName().toStdString() << ": " 

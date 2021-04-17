@@ -9,10 +9,44 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
-#define READ_ADC   "READ ADC "
-#define READ_GPIO  "READ GPIO "
-#define WRITE_DAC  "WRITE DAC "
-#define WRITE_GPIO "WRITE GPIO "
+
+enum GpioCommands
+{
+  READ_ADC   = 0, 
+  READ_GPIO  = 1, 
+  WRITE_DAC  = 2, 
+  WRITE_GPIO = 3,
+};
+
+struct Command
+{
+  Command(uint8_t command=0, uint8_t pin=0, uint16_t value=0)
+  {
+    data[0] = (command << 4) & 0xF0;
+    data[0] |= (pin & 0x0F);
+    data[1] = value >> 8;
+    data[2] = value & 0x00FF;
+  };
+
+  void reinit(char data[])
+  {
+    this->data[0] = data[0];
+    this->data[1] = data[1];
+    this->data[2] = data[2];
+  };
+
+  uint8_t command() { return (data[0] & 0xF0) >> 4; };
+  uint8_t pin() { return data[0] & 0x0F; };
+  uint16_t value() { 
+    uint16_t ret = (uint16_t) data[1] << 8;
+    uint8_t rhs = data[2];
+    ret |= rhs;
+    return ret; 
+  };
+  int size() { return 3 * sizeof(char); };
+  char data[3];
+};
+
 
 
 class GpioDevice : public SerialDevice
@@ -35,46 +69,31 @@ public:
   /// @brief: writes pin to value (state if it's a digital write)
   void digitalWrite(int pin, int value)
   {
-    QString msg = WRITE_GPIO + QString().setNum(pin) + " " 
-                + QString().setNum(value) + ";";
-    sendCommand(msg);
-    // std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    Command c(WRITE_GPIO, pin, value);
+    sendCommand(QByteArray(c.data, 3));
   };
 
 
   /// @brief: reads the digital input in and returns the int value
   int digitalRead(int pin)
   {
-    QString msg = READ_GPIO + QString().setNum(pin) + ";";
     int ret = -1;
+    Command c(READ_GPIO, pin);
 
     // make sure the message was sent before trying to read
-    if (sendCommand(msg))
+    if (sendCommand(QByteArray(c.data, 3)))
     {
+      bool ok = false;
       auto data = serialRead();
-      QString str(data);
-      std::string temp = str.toStdString();
-      
-      if (temp.find(";") != std::string::npos)
-      {
-        temp.erase(temp.find(";"));
-      }
+      ret = data.toInt(&ok);
 
-      try
+      if (!ok)
       {
-        if (!temp.empty())
-        {
-          ret = std::stoi(temp);
-        }
-      }
-      catch (std::exception & e)
-      {
-        std::cerr << "Invalid data was received: " << temp << "\n";
+        std::cerr << "Invalid data was received: " << data.toStdString() << "\n";
       }
     }
 
     return ret;
-    
   };
 
 
@@ -82,10 +101,8 @@ public:
   /// @brief: write an analog value to the specified pin
   void analogWrite(int pin, int value)
   {
-    QString msg = WRITE_DAC + QString().setNum(pin) + " " 
-                + QString().setNum(value) + ";";
-    sendCommand(msg);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    Command c(WRITE_DAC, pin, value);
+    sendCommand(QByteArray(c.data, 3));
   };
 
 
@@ -95,31 +112,20 @@ public:
   /// @return: the value read for the pin or -1 if error
   int analogRead(int pin)
   {
-    QString msg = READ_ADC + QString().setNum(pin) + ";";
     int ret = -1;
 
-    // make sure the message was sent before trying to read
-    if (sendCommand(msg))
-    {
-      auto data = serialRead();
-      std::string temp = data.toStdString();
-      
-      if (temp.find(";") != std::string::npos)
-      {
-        temp.erase(temp.find(";"));
-      }
+    Command c(READ_ADC, pin);
 
-      // catch the stoi exception on bad data
-      try
+    // make sure the message was sent before trying to read
+    if (sendCommand(QByteArray(c.data, 3)))
+    {
+      bool ok = false;
+      auto data = serialRead();
+      ret = data.toInt(&ok);
+
+      if (!ok)
       {
-        if (!temp.empty())
-        {
-          ret = std::stoi(temp);
-        }
-      }
-      catch (std::exception & e)
-      {
-        std::cerr << "Invalid data was received: " << temp << "\n";
+        std::cerr << "Invalid data was received: " << data.toStdString() << "\n";
       }
     }
 

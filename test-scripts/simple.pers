@@ -32,18 +32,23 @@ test "hello this is a test script" {
   
 
   // cars = 'this is okay too';
-  vars = 6;
+  vars = 20;
   println "*************************************";
+  // read-pin DIN 3;
+  // delay 3000;
 
   loop vars > 0
   {
-    set-pin DOUT 13 HIGH; // ok
-    delay 1000;
-    set-pin DOUT 13 LOW; // ok
-    delay 1000;
+    set-pin DOUT 2 HIGH; // ok
+    // delay 8;
+    set-pin DOUT 2 LOW; // ok
+    // delay 8;
     vars--;
     println "===================================";
   }
+  read-pin DIN 0;
+  println RETVAL;
+  set-pin AOUT 0 4000;
   exit;
 
   // // delay 3000;

@@ -217,14 +217,10 @@ PERterpreter commands
 Adding Language Features
 ============================
 
-TODO
+TODO Language features
 https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwi7wem-gr3uAhXQK80KHS4YAzAQFjAFegQIBRAC&url=ftp%3A%2F%2Fftp.wayne.edu%2Fldp%2Fen%2FLex-YACC-HOWTO%2FLex-YACC-HOWTO-single.html&usg=AOvVaw1J-o-TSm9j18GTJWmV_1EI
 
 There's a lot going on here. good luck.
-
-TODO 
-add windows compile steps
-
 
 Example Script
 =============================
@@ -255,35 +251,7 @@ test "this is a test" {
 
 Arduino Communication
 ===
-Flash the `CommandParser.ino` file to an Arduino. Located in `Testbench-Arduino/`
-
-### Arduino Serial communication protocol
-
-`GPIO_MAX` = max number of gpio pins on the Arduino
-
-`DAC_MAX` = max number of pins on the i2c DAC breakout boards
-
-`READ <TYPE> [PIN];`
-
-  * `TYPE`: `ADC` | `GPIO`
-
-    * `ADC`: This is not a readable value for the moment, as we don’t have any analog values being generated
-
-    * `GPIO`: This is a simple GPIO read of the digital pins
-
-  *   `PIN`: up to GPIO_MAX
-
-  Upon receiving a `READ` request, the Arduino will reply with `<VALUE>';'`
-
-`WRITE <TYPE> [PIN <VALUE>];`
-
-  * `TYPE`: `DAC` | `GPIO`
-
-    * `DAC`: Calls to the I2C DAC interface and writes <VALUE> to the DAC pin
-    * `GPIO`: This is a simple GPIO write of the digital pins
-  * `PIN`: up to DAC_MAX
-  * `PIN`: up to GPIO_MA
-
+Flash the `Testbench-Arduino.ino` file to an Arduino. Located in `Testbench-Arduino/`
 
 
 
@@ -298,7 +266,14 @@ Compiling
 5. Once the project has been built, open a command prompt and cd into the `build` directory. 
 6. run `windeployqt .\perterpreter.exe` to copy the necessary .dlls into the build directory so that it can be run.
 
-
+### On Linux
+1. Make sure you have the most recent version of QT5 installed.
+2. Clone the repo and init all submodules.
+3. `cd` into the repo's directory
+4. run `qmake` to generate the Makefile
+5. run `make`
+6. The executable should be now located in `<path to repo>/build/perterpreter`
+7. Prosper.
 Future developments
 ===
 * Add the ability to actually print out the expectation for an expect/assert call instead of just the call failing

@@ -30,7 +30,6 @@ extern Node * root;
 extern int errors;
 
 
-// TODO test serial
 static bool test_executing = false;
 static uint64_t timeout = 0;
 static std::exception_ptr exception;

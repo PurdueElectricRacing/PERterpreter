@@ -231,8 +231,6 @@ public:
   {
     if (device.waitForReadyRead())
     {
-      // there may or may not be data already in the buffer, so just read it 
-      // all and delimit it based on \r\n
       QString data = device.readAll();
       // qDebug() << "SerialDevice::serialRead: Received" << data << "from" 
               //  << device.portName();

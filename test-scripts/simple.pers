@@ -46,7 +46,7 @@ test "hello this is a test script" {
     vars--;
     println "===================================";
   }
-  read-pin DIN 0;
+  read-pin DIN 69;
   println RETVAL;
   set-pin AOUT 0 4000;
   exit;

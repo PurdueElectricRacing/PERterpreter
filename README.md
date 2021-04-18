@@ -11,9 +11,13 @@ To clone this repository, run the following command as this project makes use of
 
 `git clone --recurse-submodules https://github.com/PurdueElectricRacing/PERterpreter.git`
 
+
 Running the interpreter
 ========================
 The executable is supposed to be built into the `./build` directory. You can run it from here by passing the arguments necessary (see [commands](#perterpreter-commands)), or you can add it to your path.
+
+### Special considerations for Windows
+
 
 ## Language Grammar
 

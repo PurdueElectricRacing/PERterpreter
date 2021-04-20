@@ -131,7 +131,7 @@ public:
     if (default_open)
     {
       open();
-      qDebug() << "Delaying for 1000ms because the Arduino is a butthole";
+      qDebug() << "Delaying for 3000ms because the Arduino is a butthole";
       Timer t(3000);
       t.start();
       while(!t.expired())

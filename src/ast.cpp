@@ -11,7 +11,7 @@ void Node::print(int indent)
        << INDENT(indent) << "Type: " << objTypeToString(type) << "\n"
        << INDENT(indent) << "Value: ";
 
-  if (type == str || type == can_msg_obj) 
+  if (type == str || type == can_msg_obj || type == byte_array_obj) 
   {
     cout <<  data.strval;
   }

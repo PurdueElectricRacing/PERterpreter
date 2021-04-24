@@ -206,9 +206,9 @@ bool checkSendMsg(Node * node, SymbolTable * currscope)
   obj_t id_type = checkExp(node->children[0], currscope);
   obj_t msg_type = checkExp(node->children[1], currscope);
 
-  if (msg_type != can_msg_obj)
+  if (msg_type != byte_array_obj && msg_type != can_msg_obj)
   {
-    invalidParameters(msg_type, can_msg_obj, node->key, node->line_no);
+    invalidParameters(msg_type, byte_array_obj, node->key, node->line_no);
     ret = false;
   }
 
@@ -231,7 +231,7 @@ bool checkReadMsg(Node * node, SymbolTable * currscope)
 {
   bool ret = true;
   obj_t id_type = checkExp(node->children[0], currscope);
-  currscope->setRetval(new CAN_Msg());
+  currscope->setRetval(new ByteArray());
 
   if (id_type != integer)
   {
@@ -283,7 +283,7 @@ obj_t checkVardecl(Node * node, SymbolTable * currscope)
 
   o = currscope->getObject(varname);
 
-  // if there are children it must be a can object
+  // if there are children it must be a byte array object
   if ((member_access = node->getChild(length_node)) 
       || (member_access = node->getChild(index_node)))
   {
@@ -294,9 +294,9 @@ obj_t checkVardecl(Node * node, SymbolTable * currscope)
       return invalid;
     }
 
-    if (o->type() != can_msg_obj)
+    if (o->type() != can_msg_obj && o->type() != byte_array_obj)
     {
-      invalidParameters(o->type(), can_msg_obj, member_access->data.strval,
+      invalidParameters(o->type(), byte_array_obj, member_access->data.strval,
                         node->line_no);
       return invalid;
     }
@@ -466,8 +466,8 @@ obj_t checkExp(Node * exp, SymbolTable * currscope)
 
         if (child->node_type == index_node)
         {
-          // cannot use [] on non-can message types
-          if (ret != can_msg_obj)
+          // cannot use [] on non-array message types
+          if (ret != byte_array_obj && ret != can_msg_obj)
           {
             mismatched_type(ret, child->line_no, "[]");
             return invalid;
@@ -483,7 +483,8 @@ obj_t checkExp(Node * exp, SymbolTable * currscope)
           } 
         }
         // likewise, length can only be manipulated on CAN messages
-        else if (child->node_type == length_node && ret != can_msg_obj)
+        else if (child->node_type == length_node && ret != byte_array_obj 
+                 && ret != can_msg_obj)
         {
           mismatched_type(ret, child->line_no, "length");
           return invalid;

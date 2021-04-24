@@ -176,7 +176,6 @@ try
   {
     exit(-1);
   }
-
   if (!device.empty())
   {
     p.setSerialDev(device);

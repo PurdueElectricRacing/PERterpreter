@@ -12,6 +12,7 @@ enum obj_t
   can_msg_obj,
   invalid,
   boolean_obj,
+  byte_array_obj,
 };
 
 
@@ -23,6 +24,7 @@ enum node_type_t
   digital_write,
   send_msg_node,
   read_msg_node,
+  can_msg_node,
   serial_tx,
   serial_rx,
   print,
@@ -51,7 +53,7 @@ enum node_type_t
   exit_node,
   test_list_node,
   routine_list_node,
-  can_msg_node,
+  byte_array_node,
   vardecl_node,
   vardecl_list_node,
   if_node,

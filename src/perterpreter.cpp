@@ -142,11 +142,12 @@ bool Perterpreter::performSyntaxAnalysis(ghc::filesystem::path filepath)
 {
   infilename = filepath.generic_string().c_str();
   yyin = fopen(filepath.generic_string().c_str(), "r");
-
-#ifdef DEBUG
+  
+  // UNCOMMENT THESE LINES IF NEED TO SEE HOW THE PARSER IS WORKING
+  // alsu uncomment the #define YYDEBUG in parser.y
   // extern int yydebug;
   // yydebug = 1;
-#endif
+
   if (yyparse() != 0 || errors > 0)
   {
     std::cerr << "Failed to parse.\n";
@@ -154,6 +155,10 @@ bool Perterpreter::performSyntaxAnalysis(ghc::filesystem::path filepath)
     _root = root;
     return false;
   }
+
+  // UNCOMMENT THIS LINE IF YOU NEED TO SEE THE AST
+  root->print();
+  
   _root = root;
 
   // free the memory if it's already been allocated for routine list 
@@ -409,9 +414,10 @@ void Perterpreter::perterpretVardecl(Node * node, SymbolTable * scope)
   Object * rhso = perterpretExp(rhs, scope);
 
   // length or index node too
-  if (node->children.size() > 1 && lhso->type() == can_msg_obj)
+  if (node->children.size() > 1 
+      && (lhso->type() == can_msg_obj || lhso->type() == byte_array_obj))
   {
-    CAN_Msg * can = static_cast<CAN_Msg *>(lhso);
+    ByteArray * array = static_cast<ByteArray *>(lhso);
 
     // second child is always the access modifier
     Node * exp = node->children[1];
@@ -422,14 +428,14 @@ void Perterpreter::perterpretVardecl(Node * node, SymbolTable * scope)
       Node * idx = exp->children[0];
       Integer * val = static_cast<Integer *>(perterpretExp(idx, scope));
 
-      if (can->setData(val->value, target_val->value) != target_val->value)
+      if (array->setData(val->value, target_val->value) != target_val->value)
       {
-        outOfBoundsError(can->length(), val->value, node->line_no);
+        outOfBoundsError(array->Len(), val->value, node->line_no);
       }
     }
     else if (exp->node_type == length_node)
     {
-      can->setLeng(target_val->value);
+      array->setLeng(target_val->value);
     }
   }
   else
@@ -782,16 +788,33 @@ void Perterpreter::perterpret(std::string func)
 /// @throws: SerialDeviceNotConnected if no device is connected
 void Perterpreter::perterpretSerialTx(Node * node, SymbolTable * scope)
 {
-  if (serial_device->isOpen())
+  // if the serial device isn't open, then try to prompt the user to choose one 
+  // first, since it's not a requirement
+  if (!serial_device->isOpen())
   {
-    String * val = static_cast<String *>(getObject(node->children[0], scope));
-    QString cmd = val->value.c_str();
-    serial_device->sendCommand(cmd.toUtf8());
+    std::cout << "Select a generic serial device:\n";
+    serial_device->selectSerialPort();
+
+    if (!serial_device->isOpen())
+    {
+      throw SerialDeviceNotConnected;
+    }
+  }
+
+  Object * o = getObject(node->children[0], scope);
+  QByteArray msg;
+
+  if (o->type() == str)
+  {
+    std::string msgstr = static_cast<String*>(o)->value;
+    msg = QByteArray(msgstr.c_str());
   }
   else
   {
-    throw SerialDeviceNotConnected;
+    ByteArray * array = static_cast<ByteArray *>(o);
+    msg = QByteArray((char *) array->Data(), array->length());
   }
+  serial_device->sendCommand(msg);
 }
 
 
@@ -801,15 +824,19 @@ void Perterpreter::perterpretSerialTx(Node * node, SymbolTable * scope)
 /// @throws: SerialDeviceNotConnected if no device is connected
 void Perterpreter::perterpretSerialRx(SymbolTable * scope)
 {
-  if (serial_device->isOpen())
+  if (!serial_device->isOpen())
   {
-    scope->setObject("RETVAL", 
-                     new String(serial_device->serialRead().toStdString()));
+    std::cout << "Select a generic serial device:\n";
+    serial_device->selectSerialPort();
+
+    if (!serial_device->isOpen())
+    {
+      throw SerialDeviceNotConnected;
+    }
   }
-  else
-  {
-    throw SerialDeviceNotConnected;
-  }
+
+  scope->setObject("RETVAL", 
+                    new String(serial_device->serialRead().toStdString()));
 }
 
 
@@ -907,7 +934,7 @@ void Perterpreter::perterpretSendMsg(Node * node, SymbolTable * scope)
   Node * addrnode = node->children[0];
   Node * msgnode = node->children[1];
   Integer * address = static_cast<Integer *>(getObject(addrnode, scope));
-  CAN_Msg * msg = static_cast<CAN_Msg *>(getObject(msgnode, scope));
+  ByteArray * msg = static_cast<ByteArray *>(getObject(msgnode, scope));
   std::stringstream ss;
   ss << std::hex << address->value;
 
@@ -922,7 +949,16 @@ void Perterpreter::perterpretSendMsg(Node * node, SymbolTable * scope)
     throw CANDeviceNotConnected;
   }
 
-  can_if->writeCanData(address->value, msg->Len(), msg->Data());
+  // only send the first 8 bytes if the programmer made a mistake
+  // and the array is longer than 8 bytes.
+  if (msg->Len() > 8)
+  {
+    can_if->writeCanData(address->value, 8, msg->Data());
+  }
+  else
+  {
+    can_if->writeCanData(address->value, msg->Len(), msg->Data());
+  }
 }
 
 

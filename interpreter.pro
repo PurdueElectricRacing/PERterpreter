@@ -66,6 +66,7 @@ HEADERS = \
    ./src/parser.y \
    ./inc/serial-device.h \
    ./inc/perterpreter_exceptions.h \
+   ./inc/byte_array.h \
 
 
 SOURCES = \

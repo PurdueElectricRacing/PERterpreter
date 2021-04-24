@@ -207,7 +207,7 @@ public:
     // make sure the device is open
     if (device.isOpen())
     {
-      // qDebug() << "SerialDevice::sendCommand: Sending command" << cmd;
+      qDebug() << "SerialDevice::sendCommand: Sending command" << cmd;
       int written = device.write(cmd);
       if (written == -1)
       {
@@ -227,11 +227,11 @@ public:
 
 
   /// @brief: read whatever is in the buffer and return it as a qstring
-  QString serialRead()
+  QByteArray serialRead()
   {
     if (device.waitForReadyRead())
     {
-      QString data = device.readAll();
+      QByteArray data = device.readAll();
       // qDebug() << "SerialDevice::serialRead: Received" << data << "from" 
               //  << device.portName();
       return data;
@@ -239,7 +239,7 @@ public:
     std::cerr << device.portName().toStdString() << ": " 
               <<  device.errorString().toStdString() << "\n";
     device.clearError();
-    return QString("-1");
+    return QByteArray(1, -1);
   };
 
   bool isOpen() { return device.isOpen(); };

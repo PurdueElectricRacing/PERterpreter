@@ -61,8 +61,8 @@ public:
   void setString(std::string *s) {setString(*s); delete s;};
   void setString(std::string s) {type = str; data.strval = s;};
   void setInt(int i) {type = integer; data.intval = i;};
-  void setCanMsg(std::string *s) {
-    type = can_msg_obj; 
+  void setByteArray(std::string *s) {
+    type = byte_array_obj; 
     data.strval = *s; 
     delete s;
   };
@@ -71,7 +71,7 @@ public:
 // virtual Node * getChild(std::string name);
   bool isLiteral() {
     return node_type == hexLiteral_node || node_type == integerLiteral_node 
-           || node_type == stringLiteral_node || node_type == can_msg_node;
+           || node_type == stringLiteral_node || node_type == byte_array_node;
   }
 
   bool isIdentifier() { return node_type == identifier_node; };

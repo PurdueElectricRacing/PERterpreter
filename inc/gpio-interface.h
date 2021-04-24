@@ -85,7 +85,8 @@ public:
     {
       bool ok = false;
       auto data = serialRead();
-      ret = data.toInt(&ok);
+      QString s = data;
+      ret = s.toInt(&ok);
 
       if (!ok)
       {

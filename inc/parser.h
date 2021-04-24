@@ -52,8 +52,9 @@ extern int yydebug;
   #include <cstring>
 
   #include "ast.h"
+  /* #define YYDEBUG 1 */
 
-#line 57 "inc/parser.h"
+#line 58 "inc/parser.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -92,7 +93,7 @@ extern int yydebug;
     setTimeout = 283,              /* setTimeout  */
     stringLiteral = 284,           /* stringLiteral  */
     identifier = 285,              /* identifier  */
-    can_msg = 286,                 /* can_msg  */
+    byte_array = 286,              /* byte_array  */
     add = 287,                     /* add  */
     mult = 288,                    /* mult  */
     comparison = 289,              /* comparison  */
@@ -113,13 +114,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 10 "src/parser.y"
+#line 11 "src/parser.y"
 
   Node * node;
   int i;
   std::string * str;
 
-#line 123 "inc/parser.h"
+#line 124 "inc/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

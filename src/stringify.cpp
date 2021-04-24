@@ -19,7 +19,7 @@ std::string stringifyNode(Node * node)
     ss << std::hex << node->data.intval;
     return std::string("0x") + ss.str();
   }
-  else if (node->node_type == can_msg_node)
+  else if (node->node_type == byte_array_node)
   {
     return node->data.strval;
   }
@@ -44,6 +44,8 @@ std::string objTypeToString(obj_t t)
       return "Integer";
     case(can_msg_obj):
       return "CAN Message";
+    case (byte_array_obj):
+      return "Byte Array";
     case(boolean_obj):
       return "boolean";
     default:

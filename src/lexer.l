@@ -205,9 +205,9 @@ length {
   return hexLiteral;
 }
 
-([0-9AaBbCcDdEeFf][0-9AaBbCcDdEeFf]?)(\|[0-9AaBbCcDdEeFf][0-9AaBbCcDdEeFf]?){0,7} {
+([0-9AaBbCcDdEeFf][0-9AaBbCcDdEeFf]?)(\|[0-9AaBbCcDdEeFf][0-9AaBbCcDdEeFf]?)* {
   yylval.str = new std::string(yytext);
-  return can_msg;
+  return byte_array;
 }
 
 [\*/] {

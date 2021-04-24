@@ -5,6 +5,7 @@
   #include <cstring>
 
   #include "ast.h"
+  /* #define YYDEBUG 1 */
 }
 
 %union {
@@ -19,13 +20,13 @@
 %type <node> testScript Test TestList Routine RoutineList ReadMsgCall 
 %type <node> ReadPinCall SendMsgCall SetAnalogTail SetPinCall Statement 
 %type <node> StatementList VariableAssign Exp ExpectCall LoopCall
-%type <node> PromptCall PrintCall DelayCall VarList Index CanManip
+%type <node> PromptCall PrintCall DelayCall VarList Index ArrayManip
 
 %token <node> routine test loop delay read_pin set_pin perrint perrintln expect 
 %token <node> exit_tok prompt read_msg send_msg call forever dout din aout ain 
 %token <node> ';' '(' ')' '{' '}' '|' serialRx serialTx assert If Else length 
 %token <node> setTimeout
-%token <str> stringLiteral identifier can_msg add mult  
+%token <str> stringLiteral identifier byte_array add mult  
 %token <str> comparison andToken orToken NE EQ
 %token <i> integerLiteral hexLiteral dstate
 %token plusplus minusminus
@@ -207,7 +208,7 @@ Index:
 
 
 
-CanManip:
+ArrayManip:
   identifier Index {
     $$ = new Node(identifier_node, @1.first_line);
     $$->setString($1);
@@ -221,7 +222,7 @@ CanManip:
 
 
 Exp:
-   CanManip {
+   ArrayManip {
       $$ = $1;
   }
   | Exp add Exp  {
@@ -338,9 +339,9 @@ Exp:
     $$ = new Node(hexLiteral_node, @1.first_line);
     $$->setInt($1);
   }
-  | can_msg {
-    $$ = new Node(can_msg_node, @1.first_line);
-    $$->setCanMsg($1);
+  | byte_array {
+    $$ = new Node(byte_array_node, @1.first_line);
+    $$->setByteArray($1);
   }
 
   | add Exp {

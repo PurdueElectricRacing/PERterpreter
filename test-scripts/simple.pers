@@ -35,21 +35,22 @@ test "hello this is a test script" {
   vars = 20;
   println "*************************************";
   // read-pin DIN 3;
-  // delay 3000;
-
-  loop vars > 0
-  {
-    set-pin DOUT 2 HIGH; // ok
-    // delay 8;
-    set-pin DOUT 2 LOW; // ok
-    // delay 8;
-    vars--;
-    println "===================================";
-  }
-  read-pin DIN 69;
-  println RETVAL;
-  set-pin AOUT 0 4000;
+  serial-tx ff|69|00;
   exit;
+
+  // loop vars > 0
+  // {
+  //   set-pin DOUT 2 HIGH; // ok
+  //   // delay 8;
+  //   set-pin DOUT 2 LOW; // ok
+  //   // delay 8;
+  //   vars--;
+  //   println "===================================";
+  // }
+  // read-pin DIN 69;
+  // println RETVAL;
+  // set-pin AOUT 0 4000;
+  // exit;
 
   // // delay 3000;
 
@@ -113,40 +114,40 @@ test "hello this is a test script" {
   
   // println ELAPSED_MS;
   
-  can = 00|0f|69;
-  can.length = 1;
-  var3 = 10;
-  loop var3 > 6 
-  {
+  // can = 00|0f|69;
+  // can.length = 1;
+  // var3 = 10;
+  // loop var3 > 6 
+  // {
     
 
-    var1 = "string";
-    println "Message to send: " + can;
+  //   var1 = "string";
+  //   println "Message to send: " + can;
     
-    println "can[0] = " + can[0];
-    delay 2000;
-    addr = 0x420;
-    // println "CAN Address: " + addr;
-    // send-msg addr 00|0f|69;
-    // delay 200;
-    // send-msg 0x69 can;
-    // delay 200;
-    send-msg addr can;
-    can[0]++;
-    can[1]++;
-    // delay 200;
+  //   println "can[0] = " + can[0];
+  //   delay 2000;
+  //   addr = 0x420;
+  //   // println "CAN Address: " + addr;
+  //   // send-msg addr 00|0f|69;
+  //   // delay 200;
+  //   // send-msg 0x69 can;
+  //   // delay 200;
+  //   send-msg addr can;
+  //   can[0]++;
+  //   can[1]++;
+  //   // delay 200;
 
-    // read-msg 0x421;
-    // read-msg addr;
-    can.length++;
+  //   // read-msg 0x421;
+  //   // read-msg addr;
+  //   can.length++;
 
-    var3--;
-    println "var3 = " + var3;
+  //   var3--;
+  //   println "var3 = " + var3;
 
-    can.length = 2;
+  //   can.length = 2;
     // perrintln "Cheese biscuits";
     // perrint "Sausage biscuits";
-  }
+  // }
 }
 
 

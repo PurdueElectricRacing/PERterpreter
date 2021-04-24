@@ -65,6 +65,7 @@ HEADERS = \
    $$PWD/src/lexer.l \
    $$PWD/src/parser.y \
    $$PWD/inc/serial-device.h \
+   ./inc/byte_array.h \
    $$PWD/inc/perterpreter_exceptions.h \
 
 

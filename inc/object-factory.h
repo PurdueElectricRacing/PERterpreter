@@ -8,6 +8,7 @@
 #include "integer.h"
 #include "canmsg.h"
 #include "synterr.h"
+#include "byte_array.h"
 
 // Factory for creating objects from a given node
 namespace ObjectFactory {
@@ -23,6 +24,10 @@ static Object * createLiteral(obj_t type, std::string s, int lineno=0)
   if (type == str)
   {
     ret = new String(s);
+  }
+  else if (type == byte_array_obj)
+  {
+    return new ByteArray(s);
   }
   else 
   {
@@ -64,6 +69,10 @@ static Object * createGeneric(obj_t otype)
   {
     ret = new CAN_Msg();
   }
+  else if (otype == byte_array_obj)
+  {
+    ret = new ByteArray();
+  }
   else if (otype == none)
   {
     ret = new Object();
@@ -88,7 +97,8 @@ static Object * createObject(Node * node, obj_t otype = invalid)
   
   if (node->isLiteral())
   {
-    if (node->type == str || node->type == can_msg_obj)
+    if (node->type == str || node->type == can_msg_obj  
+        || node->type == byte_array_obj)
     {
       ret = createLiteral(node->type, node->data.strval);
     }

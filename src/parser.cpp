@@ -130,7 +130,7 @@ enum yysymbol_kind_t
   YYSYMBOL_setTimeout = 34,                /* setTimeout  */
   YYSYMBOL_stringLiteral = 35,             /* stringLiteral  */
   YYSYMBOL_identifier = 36,                /* identifier  */
-  YYSYMBOL_can_msg = 37,                   /* can_msg  */
+  YYSYMBOL_byte_array = 37,                /* byte_array  */
   YYSYMBOL_add = 38,                       /* add  */
   YYSYMBOL_mult = 39,                      /* mult  */
   YYSYMBOL_comparison = 40,                /* comparison  */
@@ -160,7 +160,7 @@ enum yysymbol_kind_t
   YYSYMBOL_PromptCall = 64,                /* PromptCall  */
   YYSYMBOL_PrintCall = 65,                 /* PrintCall  */
   YYSYMBOL_Index = 66,                     /* Index  */
-  YYSYMBOL_CanManip = 67,                  /* CanManip  */
+  YYSYMBOL_ArrayManip = 67,                /* ArrayManip  */
   YYSYMBOL_Exp = 68,                       /* Exp  */
   YYSYMBOL_VariableAssign = 69,            /* VariableAssign  */
   YYSYMBOL_SendMsgCall = 70,               /* SendMsgCall  */
@@ -176,7 +176,7 @@ typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 
 /* Second part of user prologue.  */
-#line 44 "src/parser.y"
+#line 45 "src/parser.y"
 
   #include <string>
   #include <iostream>
@@ -583,14 +583,14 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    70,    70,    74,   109,   112,   119,   123,   132,   142,
-     146,   150,   160,   163,   170,   174,   181,   190,   194,   201,
-     211,   216,   224,   227,   265,   293,   300,   307,   313,   319,
-     325,   329,   333,   337,   341,   346,   368,   374,   379,   385,
-     396,   405,   418,   424,   434,   440,   446,   452,   461,   471,
-     482,   492,   505,   508,   515,   526,   533,   538,   545,   550,
-     555,   566,   569,   573,   576,   579,   582,   585,   588,   591,
-     594,   597,   600,   604,   608,   611,   614,   618,   634
+       0,    71,    71,    75,   110,   113,   120,   124,   133,   143,
+     147,   151,   161,   164,   171,   175,   182,   191,   195,   202,
+     212,   217,   225,   228,   266,   294,   301,   308,   314,   320,
+     326,   330,   334,   338,   342,   347,   369,   375,   380,   386,
+     397,   406,   419,   425,   435,   441,   447,   453,   462,   472,
+     483,   493,   506,   509,   516,   527,   534,   539,   546,   551,
+     556,   567,   570,   574,   577,   580,   583,   586,   589,   592,
+     595,   598,   601,   605,   609,   612,   615,   619,   635
 };
 #endif
 
@@ -611,14 +611,14 @@ static const char *const yytname[] =
   "exit_tok", "prompt", "read_msg", "send_msg", "call", "forever", "dout",
   "din", "aout", "ain", "';'", "'('", "')'", "'{'", "'}'", "'|'",
   "serialRx", "serialTx", "assert", "If", "Else", "length", "setTimeout",
-  "stringLiteral", "identifier", "can_msg", "add", "mult", "comparison",
+  "stringLiteral", "identifier", "byte_array", "add", "mult", "comparison",
   "andToken", "orToken", "NE", "EQ", "integerLiteral", "hexLiteral",
   "dstate", "plusplus", "minusminus", "'['", "']'", "'='", "'.'",
   "$accept", "goal", "testScript", "VarList", "RoutineList", "Routine",
   "TestList", "Test", "StatementList", "ExpectCall", "PromptCall",
-  "PrintCall", "Index", "CanManip", "Exp", "VariableAssign", "SendMsgCall",
-  "ReadMsgCall", "ReadPinCall", "SetAnalogTail", "SetPinCall", "DelayCall",
-  "LoopCall", "Statement", YY_NULLPTR
+  "PrintCall", "Index", "ArrayManip", "Exp", "VariableAssign",
+  "SendMsgCall", "ReadMsgCall", "ReadPinCall", "SetAnalogTail",
+  "SetPinCall", "DelayCall", "LoopCall", "Statement", YY_NULLPTR
 };
 
 static const char *
@@ -1696,7 +1696,7 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* testScript: VarList RoutineList TestList  */
-#line 74 "src/parser.y"
+#line 75 "src/parser.y"
                                 {
       (yyval.node) = new Node("Script", 0);
       if (!(yyvsp[-2].node)->children.empty())
@@ -1732,7 +1732,7 @@ yyreduce:
     break;
 
   case 4: /* VarList: %empty  */
-#line 109 "src/parser.y"
+#line 110 "src/parser.y"
          {
       (yyval.node) = new Node(vardecl_list_node, yylineno);
   }
@@ -1740,7 +1740,7 @@ yyreduce:
     break;
 
   case 5: /* VarList: VarList VariableAssign  */
-#line 112 "src/parser.y"
+#line 113 "src/parser.y"
                            {
       (yyval.node) = (yyvsp[-1].node);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -1749,7 +1749,7 @@ yyreduce:
     break;
 
   case 6: /* RoutineList: RoutineList Routine  */
-#line 119 "src/parser.y"
+#line 120 "src/parser.y"
                       {
       (yyval.node) = (yyvsp[-1].node);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -1758,7 +1758,7 @@ yyreduce:
     break;
 
   case 7: /* RoutineList: %empty  */
-#line 123 "src/parser.y"
+#line 124 "src/parser.y"
            {
       (yyval.node) = new Node(routine_list_node, yylineno);
     }
@@ -1766,7 +1766,7 @@ yyreduce:
     break;
 
   case 8: /* Routine: routine stringLiteral '{' StatementList '}'  */
-#line 132 "src/parser.y"
+#line 133 "src/parser.y"
                                               {
     int lineno = (yylsp[-4]).first_line;
     (yyval.node) = new Node(routine_node, lineno);
@@ -1777,7 +1777,7 @@ yyreduce:
     break;
 
   case 9: /* TestList: TestList Test  */
-#line 142 "src/parser.y"
+#line 143 "src/parser.y"
                 { 
     (yyval.node) = (yyvsp[-1].node);
     (yyval.node)->addChild((yyvsp[0].node));
@@ -1786,13 +1786,13 @@ yyreduce:
     break;
 
   case 10: /* TestList: %empty  */
-#line 146 "src/parser.y"
+#line 147 "src/parser.y"
            { (yyval.node) = new Node(test_list_node, yylineno); }
 #line 1792 "src/parser.cpp"
     break;
 
   case 11: /* Test: test stringLiteral '{' StatementList '}'  */
-#line 150 "src/parser.y"
+#line 151 "src/parser.y"
                                            {
     int lineno = (yylsp[-4]).first_line;
     (yyval.node) = new Node(test_node, lineno);
@@ -1803,7 +1803,7 @@ yyreduce:
     break;
 
   case 12: /* StatementList: %empty  */
-#line 160 "src/parser.y"
+#line 161 "src/parser.y"
            {
       (yyval.node) = new Node(statement_list, yylineno);
   }
@@ -1811,7 +1811,7 @@ yyreduce:
     break;
 
   case 13: /* StatementList: StatementList Statement  */
-#line 163 "src/parser.y"
+#line 164 "src/parser.y"
                             {
       (yyval.node) = (yyvsp[-1].node);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -1820,7 +1820,7 @@ yyreduce:
     break;
 
   case 14: /* ExpectCall: expect Exp  */
-#line 170 "src/parser.y"
+#line 171 "src/parser.y"
              {
       (yyval.node) = new Node(expect_node, (yylsp[-1]).first_line);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -1829,7 +1829,7 @@ yyreduce:
     break;
 
   case 15: /* ExpectCall: assert Exp  */
-#line 174 "src/parser.y"
+#line 175 "src/parser.y"
                {
       (yyval.node) = new Node(assert_node, (yylsp[-1]).first_line);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -1838,7 +1838,7 @@ yyreduce:
     break;
 
   case 16: /* PromptCall: prompt Exp  */
-#line 181 "src/parser.y"
+#line 182 "src/parser.y"
              {
     (yyval.node) = new Node(prompt_node, (yylsp[-1]).first_line);
     (yyval.node)->addChild((yyvsp[0].node));
@@ -1847,7 +1847,7 @@ yyreduce:
     break;
 
   case 17: /* PrintCall: perrint Exp  */
-#line 190 "src/parser.y"
+#line 191 "src/parser.y"
               {
       (yyval.node) = new Node(print, (yylsp[-1]).first_line);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -1856,7 +1856,7 @@ yyreduce:
     break;
 
   case 18: /* PrintCall: perrintln Exp  */
-#line 194 "src/parser.y"
+#line 195 "src/parser.y"
                   {
       (yyval.node) = new Node(println, (yylsp[-1]).first_line);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -1865,7 +1865,7 @@ yyreduce:
     break;
 
   case 19: /* Index: '[' Exp ']'  */
-#line 201 "src/parser.y"
+#line 202 "src/parser.y"
               {
     (yyval.node) = new Node(index_node, (yylsp[-1]).first_line);
     (yyval.node)->addChild((yyvsp[-1].node));
@@ -1874,8 +1874,8 @@ yyreduce:
 #line 1875 "src/parser.cpp"
     break;
 
-  case 20: /* CanManip: identifier Index  */
-#line 211 "src/parser.y"
+  case 20: /* ArrayManip: identifier Index  */
+#line 212 "src/parser.y"
                    {
     (yyval.node) = new Node(identifier_node, (yylsp[-1]).first_line);
     (yyval.node)->setString((yyvsp[-1].str));
@@ -1884,8 +1884,8 @@ yyreduce:
 #line 1885 "src/parser.cpp"
     break;
 
-  case 21: /* CanManip: identifier '.' length  */
-#line 216 "src/parser.y"
+  case 21: /* ArrayManip: identifier '.' length  */
+#line 217 "src/parser.y"
                          {
     (yyval.node) = new Node(identifier_node, (yylsp[-2]).first_line);
     (yyval.node)->setString((yyvsp[-2].str));
@@ -1894,16 +1894,16 @@ yyreduce:
 #line 1895 "src/parser.cpp"
     break;
 
-  case 22: /* Exp: CanManip  */
-#line 224 "src/parser.y"
-            {
+  case 22: /* Exp: ArrayManip  */
+#line 225 "src/parser.y"
+              {
       (yyval.node) = (yyvsp[0].node);
   }
 #line 1903 "src/parser.cpp"
     break;
 
   case 23: /* Exp: Exp add Exp  */
-#line 227 "src/parser.y"
+#line 228 "src/parser.y"
                  {
       if ((yyvsp[-2].node)->isLiteral() && (yyvsp[0].node)->isLiteral())
       {
@@ -1946,7 +1946,7 @@ yyreduce:
     break;
 
   case 24: /* Exp: Exp mult Exp  */
-#line 265 "src/parser.y"
+#line 266 "src/parser.y"
                  {
       if ((yyvsp[-2].node)->isLiteral() && (yyvsp[0].node)->isLiteral())
       {
@@ -1979,7 +1979,7 @@ yyreduce:
     break;
 
   case 25: /* Exp: Exp NE Exp  */
-#line 293 "src/parser.y"
+#line 294 "src/parser.y"
                {
 
       (yyval.node) = new Node(comparison_node, (yylsp[-2]).first_line);
@@ -1991,7 +1991,7 @@ yyreduce:
     break;
 
   case 26: /* Exp: Exp EQ Exp  */
-#line 300 "src/parser.y"
+#line 301 "src/parser.y"
                {
 
       (yyval.node) = new Node(comparison_node, (yylsp[-2]).first_line);
@@ -2003,7 +2003,7 @@ yyreduce:
     break;
 
   case 27: /* Exp: Exp comparison Exp  */
-#line 307 "src/parser.y"
+#line 308 "src/parser.y"
                        {
       (yyval.node) = new Node(comparison_node, (yylsp[-2]).first_line);
       (yyval.node)->setString((yyvsp[-1].str));
@@ -2014,7 +2014,7 @@ yyreduce:
     break;
 
   case 28: /* Exp: Exp andToken Exp  */
-#line 313 "src/parser.y"
+#line 314 "src/parser.y"
                      {
       (yyval.node) = new Node(and_node, (yylsp[-2]).first_line);
       (yyval.node)->setString((yyvsp[-1].str));
@@ -2025,7 +2025,7 @@ yyreduce:
     break;
 
   case 29: /* Exp: Exp orToken Exp  */
-#line 319 "src/parser.y"
+#line 320 "src/parser.y"
                     {
       (yyval.node) = new Node(or_node, (yylsp[-2]).first_line);
       (yyval.node)->setString((yyvsp[-1].str));
@@ -2036,7 +2036,7 @@ yyreduce:
     break;
 
   case 30: /* Exp: identifier  */
-#line 325 "src/parser.y"
+#line 326 "src/parser.y"
                {
     (yyval.node) = new Node(identifier_node, (yylsp[0]).first_line);
     (yyval.node)->setString((yyvsp[0].str));
@@ -2045,7 +2045,7 @@ yyreduce:
     break;
 
   case 31: /* Exp: stringLiteral  */
-#line 329 "src/parser.y"
+#line 330 "src/parser.y"
                   {
     (yyval.node) = new Node(stringLiteral_node, (yylsp[0]).first_line);
     (yyval.node)->setString((yyvsp[0].str));
@@ -2054,7 +2054,7 @@ yyreduce:
     break;
 
   case 32: /* Exp: integerLiteral  */
-#line 333 "src/parser.y"
+#line 334 "src/parser.y"
                    {
     (yyval.node) = new Node(integerLiteral_node, (yylsp[0]).first_line);
     (yyval.node)->setInt((yyvsp[0].i));
@@ -2063,7 +2063,7 @@ yyreduce:
     break;
 
   case 33: /* Exp: hexLiteral  */
-#line 337 "src/parser.y"
+#line 338 "src/parser.y"
                {
     (yyval.node) = new Node(hexLiteral_node, (yylsp[0]).first_line);
     (yyval.node)->setInt((yyvsp[0].i));
@@ -2071,17 +2071,17 @@ yyreduce:
 #line 2072 "src/parser.cpp"
     break;
 
-  case 34: /* Exp: can_msg  */
-#line 341 "src/parser.y"
-            {
-    (yyval.node) = new Node(can_msg_node, (yylsp[0]).first_line);
-    (yyval.node)->setCanMsg((yyvsp[0].str));
+  case 34: /* Exp: byte_array  */
+#line 342 "src/parser.y"
+               {
+    (yyval.node) = new Node(byte_array_node, (yylsp[0]).first_line);
+    (yyval.node)->setByteArray((yyvsp[0].str));
   }
 #line 2081 "src/parser.cpp"
     break;
 
   case 35: /* Exp: add Exp  */
-#line 346 "src/parser.y"
+#line 347 "src/parser.y"
             {
       node_type_t type = (yyvsp[0].node)->node_type;
 
@@ -2108,7 +2108,7 @@ yyreduce:
     break;
 
   case 36: /* Exp: '(' Exp ')'  */
-#line 368 "src/parser.y"
+#line 369 "src/parser.y"
                 {
     (yyval.node) = (yyvsp[-1].node);
   }
@@ -2116,7 +2116,7 @@ yyreduce:
     break;
 
   case 37: /* VariableAssign: identifier '=' Exp ';'  */
-#line 374 "src/parser.y"
+#line 375 "src/parser.y"
                         {
       (yyval.node) = new Node(vardecl_node, (yylsp[-3]).first_line);
       (yyval.node)->setString((yyvsp[-3].str));
@@ -2126,7 +2126,7 @@ yyreduce:
     break;
 
   case 38: /* VariableAssign: identifier Index '=' Exp ';'  */
-#line 379 "src/parser.y"
+#line 380 "src/parser.y"
                                  {
       (yyval.node) = new Node(vardecl_node, (yylsp[-4]).first_line);
       (yyval.node)->setString((yyvsp[-4].str));
@@ -2137,7 +2137,7 @@ yyreduce:
     break;
 
   case 39: /* VariableAssign: identifier '.' length '=' Exp ';'  */
-#line 385 "src/parser.y"
+#line 386 "src/parser.y"
                                       {
       (yyval.node) = new Node(vardecl_node, (yylsp[-5]).first_line);
       Node * l = new Node(length_node, (yylsp[-5]).first_line);
@@ -2150,7 +2150,7 @@ yyreduce:
     break;
 
   case 40: /* SendMsgCall: send_msg hexLiteral Exp  */
-#line 396 "src/parser.y"
+#line 397 "src/parser.y"
                           {
       (yyval.node) = new Node(send_msg_node, (yylsp[-2]).first_line);
       Node * id = new Node(hexLiteral_node, (yylsp[-2]).first_line);
@@ -2164,7 +2164,7 @@ yyreduce:
     break;
 
   case 41: /* SendMsgCall: send_msg identifier Exp  */
-#line 405 "src/parser.y"
+#line 406 "src/parser.y"
                             {
       (yyval.node) = new Node(send_msg_node, (yylsp[-2]).first_line);
       Node * var = new Node (identifier_node, (yylsp[-2]).first_line);
@@ -2177,7 +2177,7 @@ yyreduce:
     break;
 
   case 42: /* ReadMsgCall: read_msg hexLiteral  */
-#line 418 "src/parser.y"
+#line 419 "src/parser.y"
                        {
       (yyval.node) = new Node(read_msg_node, (yylsp[-1]).first_line);
       Node * id = new Node(hexLiteral_node, (yylsp[-1]).first_line);
@@ -2188,7 +2188,7 @@ yyreduce:
     break;
 
   case 43: /* ReadMsgCall: read_msg identifier  */
-#line 424 "src/parser.y"
+#line 425 "src/parser.y"
                         {
       (yyval.node) = new Node(read_msg_node, (yylsp[-1]).first_line);
       Node * var = new Node(identifier_node, (yylsp[-1]).first_line);
@@ -2199,7 +2199,7 @@ yyreduce:
     break;
 
   case 44: /* ReadPinCall: read_pin ain integerLiteral  */
-#line 434 "src/parser.y"
+#line 435 "src/parser.y"
                               {
       (yyval.node) = new Node(analog_read, (yylsp[-2]).first_line);
       Node * pin = new Node(integerLiteral_node, (yylsp[-2]).first_line);
@@ -2210,7 +2210,7 @@ yyreduce:
     break;
 
   case 45: /* ReadPinCall: read_pin ain identifier  */
-#line 440 "src/parser.y"
+#line 441 "src/parser.y"
                             {
       (yyval.node) = new Node(analog_read, (yylsp[-2]).first_line);
       Node * var = new Node(identifier_node, (yylsp[-2]).first_line);
@@ -2221,7 +2221,7 @@ yyreduce:
     break;
 
   case 46: /* ReadPinCall: read_pin din integerLiteral  */
-#line 446 "src/parser.y"
+#line 447 "src/parser.y"
                                 {
       (yyval.node) = new Node(digital_read, (yylsp[-2]).first_line);
       Node * pin = new Node(integerLiteral_node, (yylsp[-2]).first_line);
@@ -2232,7 +2232,7 @@ yyreduce:
     break;
 
   case 47: /* ReadPinCall: read_pin din identifier  */
-#line 452 "src/parser.y"
+#line 453 "src/parser.y"
                             {
       (yyval.node) = new Node(digital_read, (yylsp[-2]).first_line);
       Node * var = new Node(identifier_node, (yylsp[-2]).first_line);
@@ -2244,7 +2244,7 @@ yyreduce:
     break;
 
   case 48: /* SetAnalogTail: integerLiteral identifier  */
-#line 461 "src/parser.y"
+#line 462 "src/parser.y"
                             { 
       (yyval.node) = new Node(analog_write, (yylsp[-1]).first_line);
       Node * pin = new Node(integerLiteral_node, (yylsp[-1]).first_line);
@@ -2259,7 +2259,7 @@ yyreduce:
     break;
 
   case 49: /* SetAnalogTail: identifier identifier  */
-#line 471 "src/parser.y"
+#line 472 "src/parser.y"
                            {
       (yyval.node) = new Node(analog_write, (yylsp[-1]).first_line);
       Node * var = new Node(identifier_node, (yylsp[-1]).first_line);
@@ -2275,7 +2275,7 @@ yyreduce:
     break;
 
   case 50: /* SetAnalogTail: identifier integerLiteral  */
-#line 482 "src/parser.y"
+#line 483 "src/parser.y"
                               {
       (yyval.node) = new Node(analog_write, (yylsp[-1]).first_line);
       Node * value = new Node(integerLiteral_node, (yylsp[-1]).first_line);
@@ -2290,7 +2290,7 @@ yyreduce:
     break;
 
   case 51: /* SetAnalogTail: integerLiteral integerLiteral  */
-#line 492 "src/parser.y"
+#line 493 "src/parser.y"
                                   {
       (yyval.node) = new Node(analog_write, (yylsp[-1]).first_line);
       Node * pin = new Node(integerLiteral_node, (yylsp[-1]).first_line);
@@ -2305,7 +2305,7 @@ yyreduce:
     break;
 
   case 52: /* SetPinCall: set_pin aout SetAnalogTail  */
-#line 505 "src/parser.y"
+#line 506 "src/parser.y"
                              {
       (yyval.node) = (yyvsp[0].node);
  }
@@ -2313,7 +2313,7 @@ yyreduce:
     break;
 
   case 53: /* SetPinCall: set_pin dout integerLiteral dstate  */
-#line 508 "src/parser.y"
+#line 509 "src/parser.y"
                                        {
       (yyval.node) = new Node(digital_write, (yylsp[-3]).first_line);
       Node * pin = new Node(integerLiteral_node, (yylsp[-3]).first_line);
@@ -2325,7 +2325,7 @@ yyreduce:
     break;
 
   case 54: /* SetPinCall: set_pin dout identifier dstate  */
-#line 515 "src/parser.y"
+#line 516 "src/parser.y"
                                    {
       (yyval.node) = new Node(digital_write, (yylsp[-3]).first_line);
       Node * var = new Node(identifier_node, (yylsp[-3]).first_line);
@@ -2337,7 +2337,7 @@ yyreduce:
     break;
 
   case 55: /* DelayCall: delay Exp  */
-#line 526 "src/parser.y"
+#line 527 "src/parser.y"
             {
       (yyval.node) = new Node(delay_node, (yylsp[-1]).first_line);
       (yyval.node)->addChild((yyvsp[0].node));
@@ -2346,7 +2346,7 @@ yyreduce:
     break;
 
   case 56: /* LoopCall: loop Exp '{' StatementList '}'  */
-#line 533 "src/parser.y"
+#line 534 "src/parser.y"
                                  {
       (yyval.node) = new Node(loop_node, (yylsp[-4]).first_line);
       (yyval.node)->addChild((yyvsp[-3].node));
@@ -2356,7 +2356,7 @@ yyreduce:
     break;
 
   case 57: /* LoopCall: loop forever '{' StatementList '}'  */
-#line 538 "src/parser.y"
+#line 539 "src/parser.y"
                                        {
       (yyval.node) = new Node(loop_node, (yylsp[-4]).first_line);
       Node * times = new Node(forever_node, (yylsp[-4]).first_line);
@@ -2367,7 +2367,7 @@ yyreduce:
     break;
 
   case 58: /* Statement: error ';'  */
-#line 545 "src/parser.y"
+#line 546 "src/parser.y"
                      {
     errors++;
     yyerrok;
@@ -2377,7 +2377,7 @@ yyreduce:
     break;
 
   case 59: /* Statement: If '(' Exp ')' '{' StatementList '}'  */
-#line 550 "src/parser.y"
+#line 551 "src/parser.y"
                                          {
       (yyval.node) = new Node(if_node, (yylsp[-6]).first_line);
       (yyval.node)->addChild((yyvsp[-4].node));
@@ -2387,7 +2387,7 @@ yyreduce:
     break;
 
   case 60: /* Statement: If '(' Exp ')' '{' StatementList '}' Else '{' StatementList '}'  */
-#line 555 "src/parser.y"
+#line 556 "src/parser.y"
                                                                     {
       (yyval.node) = new Node(if_node, (yylsp[-10]).first_line);
       (yyval.node)->addChild((yyvsp[-8].node));
@@ -2403,7 +2403,7 @@ yyreduce:
     break;
 
   case 61: /* Statement: VariableAssign  */
-#line 566 "src/parser.y"
+#line 567 "src/parser.y"
                   {
       (yyval.node) = (yyvsp[0].node);
   }
@@ -2411,7 +2411,7 @@ yyreduce:
     break;
 
   case 62: /* Statement: call stringLiteral ';'  */
-#line 569 "src/parser.y"
+#line 570 "src/parser.y"
                            {
       (yyval.node) = new Node(call_node, (yylsp[-2]).first_line);
       (yyval.node)->setString((yyvsp[-1].str));
@@ -2420,7 +2420,7 @@ yyreduce:
     break;
 
   case 63: /* Statement: LoopCall  */
-#line 573 "src/parser.y"
+#line 574 "src/parser.y"
              {
       (yyval.node) = (yyvsp[0].node);
   }
@@ -2428,7 +2428,7 @@ yyreduce:
     break;
 
   case 64: /* Statement: SetPinCall ';'  */
-#line 576 "src/parser.y"
+#line 577 "src/parser.y"
                    {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2436,7 +2436,7 @@ yyreduce:
     break;
 
   case 65: /* Statement: ReadPinCall ';'  */
-#line 579 "src/parser.y"
+#line 580 "src/parser.y"
                     {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2444,7 +2444,7 @@ yyreduce:
     break;
 
   case 66: /* Statement: ExpectCall ';'  */
-#line 582 "src/parser.y"
+#line 583 "src/parser.y"
                    {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2452,7 +2452,7 @@ yyreduce:
     break;
 
   case 67: /* Statement: PrintCall ';'  */
-#line 585 "src/parser.y"
+#line 586 "src/parser.y"
                   {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2460,7 +2460,7 @@ yyreduce:
     break;
 
   case 68: /* Statement: SendMsgCall ';'  */
-#line 588 "src/parser.y"
+#line 589 "src/parser.y"
                     {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2468,7 +2468,7 @@ yyreduce:
     break;
 
   case 69: /* Statement: ReadMsgCall ';'  */
-#line 591 "src/parser.y"
+#line 592 "src/parser.y"
                     {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2476,7 +2476,7 @@ yyreduce:
     break;
 
   case 70: /* Statement: DelayCall ';'  */
-#line 594 "src/parser.y"
+#line 595 "src/parser.y"
                   {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2484,7 +2484,7 @@ yyreduce:
     break;
 
   case 71: /* Statement: PromptCall ';'  */
-#line 597 "src/parser.y"
+#line 598 "src/parser.y"
                    {
       (yyval.node) = (yyvsp[-1].node);
   }
@@ -2492,7 +2492,7 @@ yyreduce:
     break;
 
   case 72: /* Statement: setTimeout Exp ';'  */
-#line 600 "src/parser.y"
+#line 601 "src/parser.y"
                        { 
       (yyval.node) = new Node(set_timeout, (yylsp[-2]).first_line);
       (yyval.node)->addChild((yyvsp[-1].node));
@@ -2501,7 +2501,7 @@ yyreduce:
     break;
 
   case 73: /* Statement: serialTx Exp ';'  */
-#line 604 "src/parser.y"
+#line 605 "src/parser.y"
                      {
       (yyval.node) = new Node(serial_tx, (yylsp[-2]).first_line);
       (yyval.node)->addChild((yyvsp[-1].node));
@@ -2510,7 +2510,7 @@ yyreduce:
     break;
 
   case 74: /* Statement: serialRx ';'  */
-#line 608 "src/parser.y"
+#line 609 "src/parser.y"
                  {
       (yyval.node) = new Node(serial_rx, (yylsp[-1]).first_line);
   }
@@ -2518,7 +2518,7 @@ yyreduce:
     break;
 
   case 75: /* Statement: exit_tok ';'  */
-#line 611 "src/parser.y"
+#line 612 "src/parser.y"
                  {
       (yyval.node) = new Node(exit_node, (yylsp[-1]).first_line);
   }
@@ -2526,7 +2526,7 @@ yyreduce:
     break;
 
   case 76: /* Statement: exit_tok stringLiteral ';'  */
-#line 614 "src/parser.y"
+#line 615 "src/parser.y"
                                {
       (yyval.node) = new Node(exit_node, (yylsp[-2]).first_line);
       (yyval.node)->setString((yyvsp[-1].str));
@@ -2535,7 +2535,7 @@ yyreduce:
     break;
 
   case 77: /* Statement: Exp plusplus ';'  */
-#line 618 "src/parser.y"
+#line 619 "src/parser.y"
                     {
       node_type_t type = (yyvsp[-2].node)->node_type;
 
@@ -2556,7 +2556,7 @@ yyreduce:
     break;
 
   case 78: /* Statement: Exp minusminus ';'  */
-#line 634 "src/parser.y"
+#line 635 "src/parser.y"
                       {
       node_type_t type = (yyvsp[-2].node)->node_type;
 
@@ -2806,7 +2806,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 651 "src/parser.y"
+#line 652 "src/parser.y"
 
 
 

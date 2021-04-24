@@ -835,8 +835,8 @@ void Perterpreter::perterpretSerialRx(SymbolTable * scope)
     }
   }
 
-  scope->setObject("RETVAL", 
-                    new String(serial_device->serialRead().toStdString()));
+  QByteArray data = serial_device->serialRead();
+  scope->setObject("RETVAL", new ByteArray(data.data(), data.length()));
 }
 
 

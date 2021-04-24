@@ -127,14 +127,13 @@ else
     - with this, the interpreter does not allow forward declarations / prototyping. It is not intended to be a full featured programming language, and as such having overly complex and interdependent code is discouraged
 - tests are not callable from other tests / routines, but routines can be callable from other tests and routines
 - string literals can be either "" or ''
-- values which come in the form of a buffer (aka an array) will be converted to strings to be stored in the global response object
-  - this is for ease of comparisons
 - global variables must be declared at the top of the file
 - routines must be declared after global var decls, and before test decls
-- CAN message objects have [] and .length operators
+- Byte array objects have [] and .length operators
   - [] is used to access bytes at the specified index
-  - .length is used to specify the DLC for a CAN frame
+  - .length is used to specify the last byte of the array
     - by default this will be assumed to be the number of bytes in the initial declaration
+    - Note: it is possible to extend the length of the array by incrementing the length. Doing this will add the additional bytes to the end, initialized to 0.
 - The keyword `ELAPSED_MS` can be accessed like a variable to get the current elapsed time (approx.) in milliseconds.
   - This is not a variable, and is not writable. If you try to write to it, nothing will happen. 
 - a maximum execution time for a test / routine can be specified using the `set-timeout` function.
@@ -175,6 +174,7 @@ else
 `exit` 
   - pretty much just for debugging
   - will halt routine/test execution immediately
+    - Does not fail a test or pass tests, this is simply a wrapper for the c++ exit() call.
 
 `prompt` 
   - this will print a message and block execution until the user continues
@@ -194,7 +194,7 @@ else
   - specifies that the current execution should not run for more than the specified milliseconds. Will fail the test if the timeout is reached.
 
 
-- RETVAL will be a reserved keyword for the global static result variable
+- `RETVAL` will be a reserved global static result variable
 
 
 - It is not advised to make a routine call in the middle of test execution if the RETVAL is required for later usage, as this may cause overwriting of the value

@@ -25,6 +25,15 @@ protected:
 
 public:
 
+  ByteArray(const char * vals, size_t length)
+  {
+    leng = length;
+    for (int i = 0; i < length; i++)
+    {
+      data.push_back((uint8_t) *(vals + i));
+    }
+  };
+
   ByteArray(std::string input = ""){
     leng = 0;
     parse(input);

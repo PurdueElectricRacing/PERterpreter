@@ -33,6 +33,15 @@ public:
     return duration_cast<milliseconds>(steady_clock::now() - start_time).count();
   }
 
+  void run()
+  {
+    start();
+    while (!expired())
+    {
+
+    }
+  }
+
   steady_clock::time_point start_time;
   uint64_t duration;
   bool running = false;

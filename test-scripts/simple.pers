@@ -35,8 +35,8 @@ test "hello this is a test script" {
   vars = 20;
   println "*************************************";
   // read-pin DIN 3;
-  serial-tx ff|69|00;
-  exit;
+  serial-tx 69;
+  // exit;
 
   // loop vars > 0
   // {
@@ -65,8 +65,9 @@ test "hello this is a test script" {
   // // exit;
   // // expect RETVAL EQ 5 + 6 + 90 / 32;  // ok
   
-  // // expect EQ 5 + 6 + 90 / 32 + Var1; // error previous call returns an int
-  // // expect EQ 00|0F|55;  
+  // expect EQ 5 + 6 + 90 / 32 + Var1; // error previous call returns an int
+  RETVAL = 0|0f|55;
+  expect RETVAL EQ 00|0F|55;  
   // // prompt fudge;  // error undefined
 
   // println Var1; // ok

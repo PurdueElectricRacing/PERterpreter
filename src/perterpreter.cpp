@@ -157,7 +157,7 @@ bool Perterpreter::performSyntaxAnalysis(ghc::filesystem::path filepath)
   }
 
   // UNCOMMENT THIS LINE IF YOU NEED TO SEE THE AST
-  root->print();
+  // root->print();
   
   _root = root;
 
@@ -393,13 +393,8 @@ void Perterpreter::perterpretDelay(Node * node, SymbolTable * scope)
   {
     qDebug() << "\nDelaying execution for" << delayval << "ms";
   }
-  t.duration = delayval;
-  t.start();
-
-  // start a timer for reading the message
-  while (!t.expired())
-  {
-  }
+  t.duration = delayval;  
+  t.run();
 
 }
 
@@ -809,10 +804,15 @@ void Perterpreter::perterpretSerialTx(Node * node, SymbolTable * scope)
     std::string msgstr = static_cast<String*>(o)->value;
     msg = QByteArray(msgstr.c_str());
   }
-  else
+  else if (o->type() == byte_array_obj || o->type() == can_msg_obj)
   {
     ByteArray * array = static_cast<ByteArray *>(o);
     msg = QByteArray((char *) array->Data(), array->length());
+  }
+  else if (o->type() == integer)
+  {
+    auto msgv = static_cast<Integer*>(o)->vectorize();
+    msg = QByteArray((char *) msgv.data(), msgv.size());
   }
   serial_device->sendCommand(msg);
 }

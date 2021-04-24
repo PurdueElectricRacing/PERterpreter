@@ -131,13 +131,9 @@ public:
     if (default_open)
     {
       open();
-      qDebug() << "Delaying for 3000ms because the Arduino is a butthole";
-      Timer t(3000);
-      t.start();
-      while(!t.expired())
-      {
-
-      }
+      qDebug() << "Delaying for 4000ms because the Arduino is a butthole";
+      Timer t(4000);
+      t.run();
     }
 
       
@@ -207,7 +203,7 @@ public:
     // make sure the device is open
     if (device.isOpen())
     {
-      qDebug() << "SerialDevice::sendCommand: Sending command" << cmd;
+      // qDebug() << "SerialDevice::sendCommand: Sending command" << cmd;
       int written = device.write(cmd);
       if (written == -1)
       {

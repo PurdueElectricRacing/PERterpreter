@@ -4,7 +4,7 @@
 #include <string>
 #include "typedefs.h"
 #include <iostream>
-
+#include <vector>
 struct Object
 {
   Object() {};
@@ -13,6 +13,14 @@ struct Object
   virtual std::string stringify(){ 
     return std::to_string((size_t)this) + ": type: none";
   };
+  virtual std::vector<uint8_t> vectorize(){
+    return std::vector<uint8_t>();
+  };
+
+  virtual size_t size() {
+    return sizeof(Object);
+  }
+
   obj_t o_type = none;
 };
 

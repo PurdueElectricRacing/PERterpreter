@@ -68,7 +68,7 @@ Exp:
   | hexLiteral
   | string_literal
   | intLiteral
-  | can_msg
+  | byte_array
   | [+=] Exp
   | ( Exp )
 
@@ -86,9 +86,13 @@ There are 3 data types supported:
 
 `String:` Any sort of string of characters enclosed by `''` or `""`
 
-`CAN_Msg:` A series of integers separated by the `|` symbol. 
-  - Example: `can_var = 00|42|69|A4;`
-  - Bytes are represented as Hex literals without the preceding `0x` designator
+`ByteArray:` A series of bytes separated by the `|` symbol. 
+  - Example: `bytes = 00|42|69|A4;`
+  - Bytes are represented as Hex literals without the `0x` prefix
+  - The following are examples of invalid byte arrays:
+    - `0x00|0xFF|0`
+    - `100|3000|0`
+   
 
 Integers can be used as a form of implicit boolean type, so the following is correct and would function. The convention for boolean evaluation is the same as C/C++ style boolean evaluation based on ints
 
@@ -149,6 +153,7 @@ else
 `send-msg`
   - can take up to 8 numbers, which equate to bytes, delimited by '|'
   - The data argument can be a variable, and the address can also be a variable
+  - If the array being passed to the function has a length > 8 bytes, then send-msg will send only the first 8 bybtes
 
 
 `read-msg `     
@@ -156,9 +161,9 @@ else
   - The information returned by this will be stored in a global static variable
 
 
-`expect` (LT | GT | GE | LE | NE | EQ) ([0-9]+ | CAN-Msg) 
-       ( and (LT | GT | GE | LE | NE | EQ) ([0-9]+ | CAN-Msg))* 
-       ( or (LT | GT | GE | LE | NE | EQ) ([0-9]+ | CAN-Msg) )*
+`expect` <value> (LT | GT | GE | LE | NE | EQ) ([0-9]+ | Byte Array | identifier) 
+       ( and <value> (LT | GT | GE | LE | NE | EQ) ([0-9]+ | Byte Array | identifier))* 
+       ( or <value> (LT | GT | GE | LE | NE | EQ) ([0-9]+ | Byte Array | identifier) )*
 
   - continue execution even if expectation is not met
   - Verbose printing is hard, so you will only know what line number the expectation failed on for now
@@ -179,17 +184,17 @@ else
 
 `serial-tx` 
   - writes the value specified to the global serial device location
+  - can be of any variable for (byte-array, string, literal int, etc)
 
 `serial-rx`
   - reads from the global serial device and stores the response in the static
-    response variable. Additionally will log to stdout / file output
+    response variable. Additionally will log to stdout / file output if -v switch is specified
   
 `set-timeout`
   - specifies that the current execution should not run for more than the specified milliseconds. Will fail the test if the timeout is reached.
 
 
 - RETVAL will be a reserved keyword for the global static result variable
-- the interpreter will be invokable by the GUI and from the command line (an additional command line executable will be compiled)
 
 
 - It is not advised to make a routine call in the middle of test execution if the RETVAL is required for later usage, as this may cause overwriting of the value
@@ -211,7 +216,7 @@ PERterpreter commands
     - For -R and -T, the order specified will be the order scripts are run in
   - `-b --baud`: the baud rate to use for the CAN device (only makes an impact on windows. If on Linux, use the `setup_can.sh` script). Defaults to 500kB
   - `--no-gpio`: Passing this switch will disable the requirement for selecting a serial GPIO device. Only use this if your script makes no calls to pin read or write functions. If one of these functions is called with this switch passed, an exception will be thrown and the program will terminate.
-  - `no-can`: Passing this switch will disable the requirement for having a CAN device attached. Only use this if your script makes no calls to send-msg or read-msg. If one of these functions is called with this switch passed, an exception will be thrown and the program will terminate.
+  - `--no-can`: Passing this switch will disable the requirement for having a CAN device attached. Only use this if your script makes no calls to send-msg or read-msg. If one of these functions is called with this switch passed, an exception will be thrown and the program will terminate.
 
 
 - Any devices which are communicating with the basic serial-tx/rx commands will need to send \r\n at the end of their message strings 

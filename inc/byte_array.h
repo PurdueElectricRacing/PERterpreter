@@ -147,6 +147,15 @@ public:
     return stream;
   }
 
+  virtual std::vector<uint8_t> vectorize()
+  {
+    return data;
+  }
+
+  virtual size_t size() {
+    return leng;
+  }
+
 };
 
 #endif
